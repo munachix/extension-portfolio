@@ -25,6 +25,7 @@ export interface SavedJob {
 
 export const LICENSE: LicenseConfig = {
   provider: cfg.license.provider as LicenseConfig['provider'],
+  licenseServerUrl: cfg.license.licenseServerUrl,
   productId: cfg.license.productId ?? undefined,
   checkoutUrl: cfg.license.checkoutUrl,
 };

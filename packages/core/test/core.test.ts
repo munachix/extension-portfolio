@@ -38,6 +38,23 @@ describe('verifyLicense: Polar', () => {
   });
 });
 
+describe('verifyLicense: Creem (via our license server)', () => {
+  const CREEM: LicenseConfig = { provider: 'creem', licenseServerUrl: 'https://license.example.com', productId: 'prod_1', checkoutUrl: 'https://x.test/buy' };
+  it('activates first, then validates with the instance id', async () => {
+    const calls: string[] = [];
+    const f = (async (url: string, init: RequestInit) => { calls.push(`${url} ${init.body}`); return new Response(JSON.stringify({ valid: true, instanceId: 'ins_9', productId: 'prod_1', expiresAt: null })); }) as unknown as typeof fetch;
+    const r = await activateLicense('KEY', CREEM, { fetch: f, now: 0 });
+    expect(r).toMatchObject({ valid: true, instanceId: 'ins_9' });
+    expect(calls[0]).toMatch(/\/activate .*instance_name/);
+    await refreshLicenseIfStale(CREEM, { fetch: f, now: CACHE_MS + 1 });
+    expect(calls[1]).toContain('/validate {"key":"KEY","instance_id":"ins_9"}');
+  });
+  it('passes on the server error message; 5xx counts as unreachable', async () => {
+    expect((await verifyLicense('k', CREEM, { fetch: json({ valid: false, error: 'This key has expired.' }) as typeof fetch })).error).toBe('This key has expired.');
+    expect((await activateLicense('k', CREEM, { fetch: json({}, 502) as typeof fetch })).error).toMatch(/Couldn't reach/);
+  });
+});
+
 describe('test key', () => {
   it('works only in dev builds', async () => {
     expect((await verifyLicense(DEV_TEST_KEY, LS, { dev: true })).valid).toBe(true);

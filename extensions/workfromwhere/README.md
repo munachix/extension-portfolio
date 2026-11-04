@@ -38,11 +38,11 @@ After changing code, run `pnpm build workfromwhere` again and click the ↻ relo
 - `../../packages/job-sites/src/adapters.ts`: the page selectors for every job site, shared with future extensions (VisaFlag, HireFill). When a site redesigns, this is the one file to fix.
 - `src/content/`: badge, highlighting, search-list pills.
 - `store/`: listing text, permission justifications, artwork sources.
-- `extension.config.json`: price text, Lemon Squeezy checkout link and product id.
+- `extension.config.json`: price text, Creem checkout link, product id and license server URL.
 
 ## Before the first store upload
 
-1. Create the product in Lemon Squeezy and turn on **license keys**. Put the checkout URL and product id into `extension.config.json`.
+1. Create the product in Creem with **license keys** turned on, and deploy the license server (`tools/license-worker/README.md`). Put the checkout URL, product id and license server URL into `extension.config.json`.
 2. Replace `support@REPLACE-ME.com` in `sites/landing/`.
 3. Publish `sites/landing` (e.g. Cloudflare Pages). The privacy policy URL is `<your-site>/workfromwhere/privacy.html`.
 4. Run `pnpm release workfromwhere` and upload `dist/workfromwhere-0.1.0.zip`.

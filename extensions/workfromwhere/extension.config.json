@@ -4,9 +4,10 @@
   "spec": "specs/01-workfromwhere.md",
   "priceText": "$4.99/mo or $29 lifetime",
   "license": {
-    "provider": "lemonsqueezy",
+    "provider": "creem",
+    "licenseServerUrl": "https://license.REPLACE-ME.com",
     "productId": null,
-    "checkoutUrl": "https://REPLACE-ME.lemonsqueezy.com/buy/REPLACE-ME"
+    "checkoutUrl": "https://www.creem.io/payment/prod_REPLACE-ME"
   },
   "storeExtensionId": "REPLACE-AFTER-FIRST-UPLOAD",
   "entries": {

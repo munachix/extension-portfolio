@@ -1,0 +1,10 @@
+name = "license"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+
+# Secrets (not in this file):  npx wrangler secret put CREEM_API_KEY
+[vars]
+# Comma-separated Creem product ids, e.g. "prod_abc,prod_def". Empty = accept any of your products.
+ALLOWED_PRODUCT_IDS = ""
+# Comma-separated "chrome-extension://<id>" origins. Empty = any browser extension.
+ALLOWED_ORIGINS = ""
