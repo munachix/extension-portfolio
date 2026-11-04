@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>BorderBatch</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    body { padding: 12px; }
+    header { display: flex; align-items: center; gap: 8px; } header img { width: 26px; height: 26px; }
+    #drop { border: 2px dashed var(--x-border); border-radius: 12px; padding: 22px 12px; text-align: center; cursor: pointer; margin: 10px 0; }
+    #drop.over { border-color: var(--x-accent); background: var(--x-surface); }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    input[type=range] { width: 100%; }
+    .swatches { display: flex; gap: 6px; margin-top: 6px; } .swatches button { width: 26px; height: 26px; padding: 0; border-radius: 50%; }
+    .item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--x-border); }
+    .item img { width: 46px; height: 46px; object-fit: contain; background: var(--x-surface); border-radius: 6px; flex: none; }
+    .item > div { flex: 1; min-width: 0; } .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+    .item button { padding: 4px 8px; flex: none; }
+    #looks { display: flex; flex-wrap: wrap; gap: 6px; } #looks button { padding: 3px 8px; font-size: 12px; }
+    summary { cursor: pointer; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header><img src="icons/48.png" alt=""><h1>BorderBatch</h1></header>
+  <div id="drop" role="button" tabindex="0">Drop photos here, or click to choose<br><span class="x-muted">Nothing is uploaded. Location (GPS) data is removed.</span></div>
+  <input type="file" id="files" accept="image/*" multiple hidden>
+
+  <section class="x-card">
+    <label for="preset">Size</label><select id="preset"></select>
+    <label for="border">Border <span id="borderVal"></span></label><input type="range" id="border" min="0" max="20" step="1">
+    <label for="color">Border colour</label>
+    <div class="x-row"><input type="color" id="color"><div class="swatches"><button type="button" data-color="#ffffff" style="background:#fff" aria-label="White"></button><button type="button" data-color="#000000" style="background:#000" aria-label="Black"></button><button type="button" data-color="#f3efe7" style="background:#f3efe7" aria-label="Cream"></button></div></div>
+  </section>
+
+  <details class="x-card pro-only"><summary>Watermark (Pro)</summary>
+    <label class="x-check"><input type="checkbox" id="wmOn"> Add a watermark</label>
+    <label for="wmText">Text</label><input type="text" id="wmText" placeholder="@yourname">
+    <label for="logo">…or a logo (PNG)</label><input type="file" id="logo" accept="image/png,image/webp,image/svg+xml">
+    <div class="row2">
+      <div><label for="wmCorner">Position</label><select id="wmCorner"><option value="br">Bottom right</option><option value="bl">Bottom left</option><option value="tr">Top right</option><option value="tl">Top left</option><option value="c">Centre</option></select></div>
+      <div><label for="wmColor">Colour</label><input type="color" id="wmColor"></div>
+    </div>
+    <label for="wmOpacity">Opacity</label><input type="range" id="wmOpacity" min="5" max="100">
+    <label for="wmSize">Size</label><input type="range" id="wmSize" min="5" max="60">
+  </details>
+
+  <details class="x-card pro-only"><summary>Carousel splitter (Pro)</summary>
+    <label class="x-check"><input type="checkbox" id="carousel"> Split a panorama into seamless slides</label>
+    <label for="tiles">Number of slides (2–10)</label><input type="number" id="tiles" min="2" max="10">
+  </details>
+
+  <details class="x-card pro-only"><summary>Quality &amp; saved looks (Pro)</summary>
+    <label for="quality">JPEG quality <span id="qualityVal"></span></label><input type="range" id="quality" min="60" max="100">
+    <label class="x-check"><input type="checkbox" id="sharpen"> Light sharpening for web</label>
+    <button type="button" id="saveLook">Save this look</button>
+    <div id="looks" style="margin-top:8px"></div>
+  </details>
+
+  <div class="x-row" style="margin:10px 0"><button type="button" id="go" class="primary">Make photos</button><button type="button" id="zip" hidden>Download all (ZIP)</button><button type="button" id="clear">Clear</button></div>
+  <div class="x-muted" id="count"></div>
+  <div class="x-msg" id="msg" role="status"></div>
+  <div id="list"></div>
+  <section id="pro"></section>
+  <p class="x-muted">Not affiliated with Instagram or Meta.</p>
+  <script src="panel.js"></script>
+</body>
+</html>

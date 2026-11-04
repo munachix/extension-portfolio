@@ -194,6 +194,22 @@ importers:
         specifier: ^3.2.0
         version: 3.2.7(@types/node@26.6.6)
 
+  extensions/borderbatch:
+    dependencies:
+      '@ext/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@ext/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      fflate:
+        specifier: ^0.8.2
+        version: 0.8.3
+    devDependencies:
+      '@ext/testing':
+        specifier: workspace:*
+        version: link:../../packages/testing
+
   extensions/hirefill:
     dependencies:
       '@ext/core':
