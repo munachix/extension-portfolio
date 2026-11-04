@@ -47,7 +47,19 @@ test('Free, US: Google shows as an H-1B sponsor; numbers are Pro', async () => {
   await badge(page).locator('button.p').click();
   await expect(badge(page).locator('.pop')).toContainText('Registered as “Google LLC”');
   await expect(badge(page).locator('.pop')).toContainText('H-1B filing counts and salaries: Pro');
-  await expect(page.locator('[data-occludable-job-id] [data-vf-badge]')).toHaveCount(0); // list badges are Pro
+  await expect(page.locator('[data-occludable-job-id="1"] [data-vf-badge] button.p')).toHaveCount(1, { timeout: 8000 }); // list badges are free
+});
+
+test('Free: all 4 countries at once, search any company, no hiding', async () => {
+  const opts = await setup({ settings: { countries: ['us', 'uk', 'ca', 'nl'], listBadges: true, hideNonSponsors: true } });
+  const page = await h.context.newPage();
+  await page.goto(JOB);
+  await expect(badge(page).locator('button.p')).toHaveCount(4, { timeout: 8000 });
+  await expect(page.locator('[data-occludable-job-id="2"]')).toBeVisible(); // hiding non-sponsors is Pro
+  await opts.reload();
+  await opts.getByPlaceholder('Company name, e.g. Monzo').fill('Monzo');
+  await opts.getByRole('button', { name: 'Check', exact: true }).click();
+  await expect(opts.getByText('“Monzo Bank Limited”')).toBeVisible();
 });
 
 test('Free, UK: "Google" is a likely match for "Google (UK) Limited"', async () => {
@@ -57,7 +69,7 @@ test('Free, UK: "Google" is a likely match for "Google (UK) Limited"', async () 
   await expect(badge(page).locator('button.p')).toContainText('Likely sponsor', { timeout: 8000 });
 });
 
-test('Pro: all 4 countries, US numbers, list badges and hiding non-sponsors', async () => {
+test('Pro: US numbers and hiding non-sponsors', async () => {
   await setup({ license: PRO, settings: { countries: ['us', 'uk', 'ca', 'nl'], listBadges: true, hideNonSponsors: true } });
   const page = await h.context.newPage();
   await page.goto(JOB);
@@ -76,7 +88,7 @@ test('popup shows each dataset and when it was updated', async () => {
   await expect(opts.getByText('updated FY2026 Q3')).toBeVisible();
 });
 
-test('Pro search box finds any company', async () => {
+test('search box finds any company', async () => {
   const opts = await setup({ license: PRO, settings: { countries: ['uk'], listBadges: true, hideNonSponsors: false } });
   await opts.reload();
   await opts.getByPlaceholder('Company name, e.g. Monzo').fill('Monzo');

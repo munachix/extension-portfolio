@@ -12,11 +12,12 @@ Most reconciliation differences come from a handful of mechanical mistakes. Reco
 Click a suggestion to jump to and highlight the transaction. ReconFinder never ticks, edits or saves anything: you stay in control.
 
 FREE
-• All single-transaction checks above, with highlighting
+• All single-transaction checks above, with highlighting, on every reconciliation
+• Combinations on 3 reconciliations a month, so you can see them work
 • Readable QuickBooks tab titles ("Client name · Page"), so you can tell your client tabs apart
 
 PRO ($9/month or $79/year)
-• Combinations: 2–3 transactions that together explain the difference (tick some, untick others)
+• Combinations on every reconciliation: 2–3 transactions that together explain the difference (tick some, untick others)
 • Paste mode: paste a list from a bank statement, spreadsheet or other software and find the cause there
 • Export the candidates to CSV for the client file
 

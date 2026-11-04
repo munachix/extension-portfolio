@@ -13,14 +13,15 @@ HOW IT WORKS
 • ✕ Not listed: not found on that country's list
 • Click a badge for details: visa routes, rating, H-1B counts and the official registered name
 
-FREE
-• One country of your choice, on every job page
+FREE, NO LIMIT
+• All 4 countries at once: US, UK, Canada, Netherlands
+• Badges on job pages and on search-result lists
+• Search any company name
 
-PRO ($5.99/month or $39 lifetime)
-• All 4 countries at once
+PRO ($24 once, no subscription)
 • US: certified H-1B filings this year and last year, plus the median salary offered
-• Badges on search-result lists, and hide companies that don't sponsor
-• Search any company name, save a list and export it to CSV
+• Hide companies that don't sponsor from search results
+• Save a shortlist of companies and export it to CSV
 
 PRIVATE BY DESIGN
 • Matching happens on your computer. The sponsor lists download once a week; your browsing never leaves your device.

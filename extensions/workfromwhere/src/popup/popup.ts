@@ -2,7 +2,7 @@ import { downloadText, isPro, markRateUsShown, shouldShowRateUs, storeListingUrl
 import { renderPaywall } from '@ext/ui';
 import cfg from '../../extension.config.json';
 import { mountProfileForm } from '../form';
-import { LICENSE, PRICE, PRO_FEATURES, PRODUCT, savedJobs } from '../settings';
+import { LICENSE, PRICE, PRO_FEATURES, FREE_FEATURES, PRODUCT, savedJobs } from '../settings';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const LABEL = { green: '🟢 Open to you', red: '🔴 Restricted', yellow: '🟡 Unclear', unset: '⚪ Set your country' } as Record<string, string>;
@@ -78,7 +78,7 @@ async function rateUs() {
 async function init() {
   await mountProfileForm($('profile'));
   const pro = await isPro();
-  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, onChange: (p) => void saved(p) });
+  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, freeText: FREE_FEATURES, onChange: (p) => void saved(p) });
   await Promise.all([status(), saved(pro), rateUs()]);
   $('options').addEventListener('click', (e) => { e.preventDefault(); chrome.runtime.openOptionsPage(); });
 }

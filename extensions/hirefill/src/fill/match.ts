@@ -18,11 +18,25 @@ export function bestOption(options: string[], prefs: string[]): number {
     }
     i = opts.findIndex((o) => !isPlaceholder(o) && (o.startsWith(p) || p.startsWith(o)) && Math.min(o.length, p.length) >= 3);
     if (i >= 0) return i;
-    i = opts.findIndex((o) => !isPlaceholder(o) && p.length >= 4 && o.includes(p));
-    if (i >= 0) return i;
+    // "contains" only counts when it points at one option; otherwise leave it to the person.
+    const inside = opts.map((o, k) => (!isPlaceholder(o) && p.length >= 4 && o.includes(p) ? k : -1)).filter((k) => k >= 0);
+    if (inside.length === 1) return inside[0];
+  }
+  // Same words, different glue: "University of Texas at Austin" = "University of Texas - Austin".
+  for (const raw of prefs) {
+    const want = words(raw);
+    if (want.size < 2) continue;
+    const same = opts.map((o, k) => (!isPlaceholder(o) && sameSet(words(o), want) ? k : -1)).filter((k) => k >= 0);
+    if (same.length === 1) return same[0];
+    const sup = opts.map((o, k) => (!isPlaceholder(o) && [...want].every((w) => words(o).has(w)) ? k : -1)).filter((k) => k >= 0);
+    if (sup.length === 1) return sup[0];
   }
   return -1;
 }
+
+const STOP = new Set(['the', 'of', 'at', 'in', 'and', 'for', 'a', 'an']);
+function words(s: string): Set<string> { return new Set(norm(s).split(' ').filter((w) => w && !STOP.has(w))); }
+function sameSet(a: Set<string>, b: Set<string>): boolean { return a.size === b.size && [...a].every((w) => b.has(w)); }
 
 const COUNTRY_ALIASES: Record<string, string[]> = {
   'united states': ['United States of America', 'USA', 'US', 'U.S.'],

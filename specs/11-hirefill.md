@@ -17,7 +17,7 @@
 
 | Problem in the market | Evidence | Our answer |
 |---|---|---|
-| **Subscriptions hurt people who are unemployed** | Simplify+ is $19.99/week, $39.99/month or $89.99 per 3 months, with no free trial and no refunds once activated ([Wobo review](https://www.wobo.ai/blog/simplify-review/)) | **$39 once, forever.** Early-bird $29. |
+| **Subscriptions hurt people who are unemployed** | Simplify+ is $19.99/week, $39.99/month or $89.99 per 3 months, with no free trial and no refunds once activated ([Wobo review](https://www.wobo.ai/blog/simplify-review/)) | **$39 once, forever.** Autofill free. |
 | **Autofill breaks on big-company portals** | Tested accuracy: Greenhouse ~90%, Lever ~85%, **Workday ~70%, iCIMS ~50%, Taleo ~40%** ([same source](https://www.wobo.ai/blog/simplify-review/)) | Dedicated adapters for each portal, Workday first. Target ≥90% on all five. |
 | **AI resume tailoring is buggy or "terrible"** | Users on Reddit and Trustpilot complain; they "edit manually" | **Truth-guard tailoring:** only rephrases and reorders what you actually did. Shows every change; you approve. |
 | **Auto-apply bots get accounts flagged** | Review sites warn LinkedIn/Indeed accounts get flagged ([JobRizzer guide](https://jobrizzer.com/guides/best-job-application-autofill-extensions)) | **Fills, never submits.** You always click Submit. |
@@ -33,8 +33,8 @@
 Anyone applying to many jobs: graduates, career changers, laid-off workers, people applying abroad. The UI is in plain language, built for non-technical people.
 
 ## 4. Pricing
-- **Free:** 15 full autofills to try everything (counts only completed fills).
-- **Lifetime: $39** (early-bird $29 for the first 200 buyers). All features, free updates.
+- **Free, no limit:** autofill on every portal (incl. Workday work history), Answer Bank, tracker + CSV, keyword match. Simplify's autofill is free, so ours must be too (revised Nov 2026).
+- **Pro, $39 once:** unlimited AI tailoring + PDF/Word export, cover letters, answer drafts. 5 free AI drafts to try it.
 - Payment: Lemon Squeezy or Polar checkout → license key → paste into HireFill. Both pay out to Nigeria.
 - **14-day refund, no questions asked.** This builds trust against competitors with no-refund policies.
 

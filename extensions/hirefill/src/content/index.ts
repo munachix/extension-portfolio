@@ -4,12 +4,11 @@
  * offers to save new answers, and continues on the next page of multi-page
  * portals after YOU click Next. It never clicks Submit/Apply.
  */
-import { isPro } from '@ext/core';
 import { adapterFor, generic, watchPage } from '@ext/job-sites';
 import { upsert } from '../answers/bank';
 import { collectFields } from '../fill/fields';
 import { fillPage, keyOf, type FillResult } from '../fill/engine';
-import { db, FREE_FILLS, storedToFile, type Application } from '../store';
+import { db, storedToFile, type Application } from '../store';
 
 declare global { interface Window { __hfLoaded?: boolean } }
 
@@ -112,14 +111,8 @@ function focusNextEmpty() {
 // ---------- filling ----------
 async function runFill(auto = false) {
   if (busy) return;
-  const pro = await isPro();
-  const used = await db.fills();
+  // Autofill is free and unlimited; only the AI writing help is Pro.
   const isNewApplication = !filledUrls.has(applicationKey());
-  if (!pro && isNewApplication && used >= FREE_FILLS) {
-    render({ message: `You’ve used your ${FREE_FILLS} free fills. Get HireFill for $39 once (no subscription) to keep going.` });
-    chrome.runtime.sendMessage({ type: 'hf:openPanel', tab: 'settings' });
-    return;
-  }
   busy = true;
   render({});
   style();

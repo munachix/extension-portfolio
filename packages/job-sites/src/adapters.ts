@@ -82,7 +82,7 @@ const href = (el: Element) => (el.querySelector('a[href]') as HTMLAnchorElement 
 
 export const linkedin = make({
   id: 'linkedin', label: 'LinkedIn Jobs',
-  matches: ['https://www.linkedin.com/*'], host: /(^|\.)linkedin\.com$/, path: /^\/jobs/,
+  matches: ['https://*.linkedin.com/*'], host: /(^|\.)linkedin\.com$/, path: /^\/jobs/,
   title: ['.job-details-jobs-unified-top-card__job-title', '.jobs-unified-top-card__job-title', '.top-card-layout__title', 'h1'],
   company: ['.job-details-jobs-unified-top-card__company-name', '.jobs-unified-top-card__company-name', '.topcard__org-name-link'],
   location: [

@@ -3,7 +3,7 @@
   "productName": "FlipComps",
   "spec": "specs/13-flipcomps.md",
   "priceText": "$5.99/mo or $39 lifetime",
-  "license": { "provider": "creem", "licenseServerUrl": "https://license.REPLACE-ME.com", "productId": null, "checkoutUrl": "https://www.creem.io/payment/prod_REPLACE-ME" },
+  "license": { "provider": "creem", "licenseServerUrl": "https://license.REPLACE-ME.com", "productIds": [], "checkoutUrl": "https://www.creem.io/payment/prod_REPLACE-ME" },
   "storeExtensionId": "REPLACE-AFTER-FIRST-UPLOAD",
   "entries": { "content": "src/content/index.ts", "popup": "src/popup/popup.ts", "background": "src/background.ts" }
 }

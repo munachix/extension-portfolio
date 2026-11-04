@@ -67,15 +67,15 @@ test('6000×4000 JPEG → 1080×1350 with even white borders, under 1.5 MB, GPS 
   expect(Math.min(...info.middle)).toBeLessThan(240); // photo, not border
 });
 
-test('Free: 5 photos per batch, no ZIP', async () => {
+test('Free: 20 photos per batch, ZIP included', async () => {
   const p = await openPanel();
   const jpg = await makeJpeg(p, 800, 600);
-  await p.locator('#files').setInputFiles(Array.from({ length: 6 }, (_, i) => ({ name: `p${i}.jpg`, mimeType: 'image/jpeg', buffer: jpg })));
-  await expect(p.locator('.item')).toHaveCount(5);
-  await expect(p.locator('#msg')).toContainText('up to 5 photos');
+  await p.locator('#files').setInputFiles(Array.from({ length: 21 }, (_, i) => ({ name: `p${i}.jpg`, mimeType: 'image/jpeg', buffer: jpg })));
+  await expect(p.locator('.item')).toHaveCount(20);
+  await expect(p.locator('#msg')).toContainText('up to 20 photos');
   await p.locator('#go').click();
-  await expect(p.getByText('GPS removed')).toHaveCount(5, { timeout: 20000 });
-  await expect(p.locator('#zip')).toBeHidden();
+  await expect(p.getByText('GPS removed')).toHaveCount(20, { timeout: 30000 });
+  await expect(p.locator('#zip')).toBeVisible();
 });
 
 test('Pro: a batch of 50 photos in under 30 s, downloaded as one ZIP', async () => {

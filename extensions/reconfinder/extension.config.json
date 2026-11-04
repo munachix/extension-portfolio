@@ -3,7 +3,7 @@
   "productName": "ReconFinder",
   "spec": "specs/14-reconfinder.md",
   "priceText": "$9/mo or $79/year",
-  "license": { "provider": "creem", "licenseServerUrl": "https://license.REPLACE-ME.com", "productId": null, "checkoutUrl": "https://www.creem.io/payment/prod_REPLACE-ME" },
+  "license": { "provider": "creem", "licenseServerUrl": "https://license.REPLACE-ME.com", "productIds": [], "checkoutUrl": "https://www.creem.io/payment/prod_REPLACE-ME" },
   "storeExtensionId": "REPLACE-AFTER-FIRST-UPLOAD",
   "entries": { "content": "src/content/index.ts", "popup": "src/popup/popup.ts", "background": "src/background.ts" }
 }

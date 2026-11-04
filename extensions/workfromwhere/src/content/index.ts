@@ -51,7 +51,7 @@ async function main() {
         if (v.status === 'red' || v.status === 'green') void recordSuccess(location.href.split(/[?#]/)[0]);
       }
     }
-    if (st.pro && st.settings.listBadges && adapter.listItems) applyListBadges(adapter.listItems(document), st.settings);
+    if (st.settings.listBadges && adapter.listItems) applyListBadges(adapter.listItems(document), { ...st.settings, hideRed: st.pro && st.settings.hideRed });
     else clearListBadges();
   };
 

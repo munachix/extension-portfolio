@@ -49,7 +49,7 @@ export function wantFor(key: Key, p: Profile, ctx: { work?: number; edu?: number
     case 'authorizedToWork': return p.answers.authorizedToWork ? { choice: yn(p.answers.authorizedToWork) } : null;
     case 'needSponsorship': return p.answers.needSponsorship ? { choice: yn(p.answers.needSponsorship) } : null;
     case 'willingToRelocate': return p.answers.willingToRelocate ? { choice: yn(p.answers.willingToRelocate) } : null;
-    case 'howDidYouHear': return { text: p.answers.howDidYouHear, choice: [p.answers.howDidYouHear, 'Company Website', 'Careers Site', 'Job Board', 'LinkedIn', 'Other'].filter(Boolean) };
+    case 'howDidYouHear': return { text: p.answers.howDidYouHear, choice: [p.answers.howDidYouHear, 'Company Website', 'Careers Site', 'Careers Page', 'Website', 'Job Board', 'LinkedIn', 'Other'].filter(Boolean) };
     case 'gender': return { choice: demo(p.answers.gender) };
     case 'ethnicity': return { choice: demo(p.answers.ethnicity) };
     case 'hispanic': return { choice: p.answers.ethnicity && p.answers.ethnicity !== DECLINE ? [/hispanic|latino/i.test(p.answers.ethnicity) ? 'Yes' : 'No', ...DECLINE_PREFS] : DECLINE_PREFS };

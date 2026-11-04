@@ -34,8 +34,13 @@ function typeInto(el: HTMLInputElement | HTMLTextAreaElement, value: string) {
   el.blur();
   fire(el, 'blur', 'focusout');
 }
+/** A full pointer + mouse sequence. Live react-select (Greenhouse) ignores a bare mousedown or keyboard events. */
 function pointerClick(el: Element) {
-  for (const t of ['pointerdown', 'mousedown', 'pointerup', 'mouseup']) el.dispatchEvent(new MouseEvent(t, { bubbles: true, cancelable: true, button: 0 }));
+  const r = el.getBoundingClientRect();
+  const at = { bubbles: true, cancelable: true, composed: true, button: 0, view: window, clientX: r.left + Math.min(10, r.width / 2), clientY: r.top + r.height / 2 };
+  for (const t of ['pointerover', 'pointerenter', 'mouseover', 'pointerdown', 'mousedown', 'pointerup', 'mouseup']) {
+    el.dispatchEvent(t.startsWith('pointer') ? new PointerEvent(t, { ...at, pointerId: 1, pointerType: 'mouse', isPrimary: true }) : new MouseEvent(t, at));
+  }
   safeClick(el);
 }
 
@@ -44,6 +49,7 @@ export function keyOf(f: Field): Key | null {
   const wd = Object.entries(WORKDAY_IDS).find(([id]) => f.automationId === id || f.automationId.endsWith(`_${id}`) || f.hint.split(' ').includes(id));
   if (wd) return wd[1];
   const text = `${f.label} ${f.hint}`;
+  if (/pronunciation|pronounce/i.test(text)) return null; // "How do you pronounce your name?" is yours to answer
   if (f.block) return classify(text, f.block.type === 'work' ? WORK_PATTERNS : EDU_PATTERNS) ?? classify(text);
   if (f.kind === 'file') return /cover/i.test(text) ? 'coverLetter' : 'resume';
   return classify(text, KEY_PATTERNS);
@@ -70,6 +76,11 @@ async function waitFor<T>(fn: () => T | null | undefined, ms = 1500, wait = slee
 function visibleOptions(near?: Element): HTMLElement[] {
   const controls = near?.getAttribute('aria-controls') || near?.getAttribute('aria-owns');
   const scope = (controls && document.getElementById(controls)) || document;
+  // react-select names its options after the input id; prefer those over any other list on the page (e.g. phone country pickers).
+  if (near?.id) {
+    const own = [...document.querySelectorAll<HTMLElement>(`[id^="react-select-${CSS.escape(near.id)}-option"]`)].filter((o) => o.getClientRects().length > 0);
+    if (own.length) return own;
+  }
   return [...scope.querySelectorAll<HTMLElement>('[role="option"], [data-automation-id="promptOption"], [class*="select__option"]')]
     .filter((o) => o.getClientRects().length > 0 && !o.closest('[data-x-ext-ui]'));
 }
@@ -129,7 +140,7 @@ async function fillOne(f: Field, want: Want, files: Files, wait = sleep): Promis
       // 1. Open the full list (react-select, Workday) and pick from every option.
       input.focus();
       input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', code: 'ArrowDown', keyCode: 40, bubbles: true }));
-      input.closest('[class*="select__control"]')?.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, button: 0 }));
+      if (!visibleOptions(input).length) pointerClick(input.closest('[class*="select__control"], [class*="-control"]') ?? input);
       const all = await waitFor(() => { const o = visibleOptions(input); return o.length ? o : null; }, 600, wait);
       if (all) {
         const i = bestOption(all.map((o) => o.textContent ?? ''), prefs);

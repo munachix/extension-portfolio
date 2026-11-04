@@ -55,7 +55,7 @@ async function main() {
     await resolve(names);
     if (!ctx) return;
     if (job?.companyEl && job.companyText) place(job.companyEl, job.companyText, false);
-    const showList = ctx.pro && ctx.settings.listBadges;
+    const showList = ctx.settings.listBadges;
     for (const it of items) {
       if (!it.companyEl || !it.companyText) continue;
       if (showList) place(it.companyEl, it.companyText, true);

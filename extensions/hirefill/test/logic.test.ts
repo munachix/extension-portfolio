@@ -62,6 +62,11 @@ describe('field recognition', () => {
     ['Are you legally authorized to work in the United States?', 'authorizedToWork'], ['What is your current country of residence?', 'country'],
     ['Current company', 'currentCompany'], ['How did you hear about us?', 'howDidYouHear'], ['Are you Hispanic/Latino?', 'hispanic'], ['Veteran Status', 'veteran'],
     ['Desired salary', 'salaryExpectation'], ['Vorname', 'firstName'], ['I agree to the privacy policy', 'acceptTerms'],
+    // Seen on live Lever/Greenhouse forms (Nov 2026)
+    ['Please tell us how you heard about this opportunity.', 'howDidYouHear'],
+    ['Which university are you currently attending or did you last attend?', 'eduSchool'],
+    ['Preferred Name | What would you like us to call you?', 'preferredName'],
+    ['Pronouns', 'gender'],
   ])('%s → %s', (label, key) => expect(classify(label)).toBe(key));
   it('work block fields', () => {
     expect(classify('Job Title*', WORK_PATTERNS)).toBe('workTitle');
@@ -73,6 +78,15 @@ describe('option choice', () => {
   it('yes/no and decline', () => {
     expect(bestOption(['Select...', 'Yes, I am authorized', 'No'], ['Yes'])).toBe(1);
     expect(bestOption(['Male', 'Female', 'I don’t wish to answer'], wantFor('gender', emptyProfile())!.choice!)).toBe(2);
+  });
+  it('same words, different glue (live Lever university list)', () => {
+    const unis = ['Click Here', 'University of North Texas - Dallas', 'University of Texas - Arlington', 'University of Texas - Austin', 'University of Texas - Dallas'];
+    expect(bestOption(unis, ['University of Texas at Austin'])).toBe(3);
+    expect(bestOption(unis, ['Texas'])).toBe(-1); // too vague: several match
+  });
+  it('"Company website" finds "<Company> Website"', () => {
+    const p = { ...emptyProfile(), answers: { ...emptyProfile().answers, howDidYouHear: 'Company website' } };
+    expect(bestOption(['Select...', 'Glassdoor', 'LinkedIn', 'Palantir Website', 'Other'], wantFor('howDidYouHear', p)!.choice!)).toBe(3);
   });
   it('countries with aliases', () => {
     const p = { ...emptyProfile(), country: 'United States' };

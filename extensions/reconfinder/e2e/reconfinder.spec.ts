@@ -40,6 +40,20 @@ test('Pro finds combinations', async () => {
   await expect(panel(p)).toContainText('Tick 10/09/2026 Vendor refund $89.00 + Tick 10/12/2026 Coffee Shop −$12.75', { timeout: 8000 });
 });
 
+test('Free finds combinations on 3 reconciliations a month, then asks for Pro', async () => {
+  const p = await h.context.newPage();
+  await p.goto(URL_);
+  await p.evaluate(() => { document.querySelector('.diff div:last-child')!.textContent = '$76.25'; document.body.append(document.createElement('i')); });
+  await expect(panel(p)).toContainText('Tick 10/09/2026 Vendor refund $89.00 + Tick 10/12/2026 Coffee Shop −$12.75', { timeout: 8000 });
+  await expect(panel(p)).toContainText('2 more reconciliations this month');
+  const month = new Date().toISOString().slice(0, 7);
+  await setStorage(h, { comboAllowance: { month, recs: ['/a', '/b', '/c'] } });
+  await p.reload();
+  await p.evaluate(() => { document.querySelector('.diff div:last-child')!.textContent = '$76.25'; document.body.append(document.createElement('i')); });
+  await expect(panel(p)).toContainText('used this month’s 3 free combination searches', { timeout: 8000 });
+  await expect(panel(p)).not.toContainText('Coffee Shop −$12.75');
+});
+
 test('Pro paste mode in the popup', async () => {
   await setStorage(h, { license: PRO });
   const p = await h.context.newPage();

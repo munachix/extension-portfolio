@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { computeMetrics, decide, healthFlags, revenueStatus, scorecard, selfTraffic } from '../lib/engine.mjs';
 import { normalizeRows, upsertRow, weekStart } from '../lib/data.mjs';
 import { parseCsv, stringifyCsv } from '../lib/csv.mjs';
-import { lemonSqueezyRevenue, parseCwsExport, polarRevenue } from '../lib/import.mjs';
+import { creemRevenue, lemonSqueezyRevenue, parseCwsExport, polarRevenue } from '../lib/import.mjs';
 import { renderDashboard } from '../lib/dashboard.mjs';
 import { formatReport } from '../lib/report.mjs';
 
@@ -170,6 +170,17 @@ describe('importers', () => {
   it('Polar: orders in the last 30 days', async () => {
     const body = { items: [{ created_at: '2026-11-01T00:00:00Z', net_amount: 3900, status: 'paid' }, { created_at: '2026-09-01T00:00:00Z', net_amount: 3900, status: 'paid' }], pagination: { max_page: 1 } };
     expect(await polarRevenue({ token: 't', organizationId: 'o', productId: 'p', now, fetch: async () => new Response(JSON.stringify(body)) })).toEqual({ revenue: 39, sales: 1 });
+  });
+  it('Creem: paid transactions for monthly + lifetime products, minus tax and refunds', async () => {
+    const nowS = Math.floor(now.getTime() / 1000);
+    const pages = {
+      prod_month: { items: [{ created_at: nowS - 86400, amount_paid: 599, tax_amount: 0, refunded_amount: null, status: 'paid' }, { created_at: nowS - 40 * 86400, amount_paid: 599, status: 'paid' }], pagination: { next_page: null } },
+      prod_life: { items: [{ created_at: (nowS - 3600) * 1000, amount_paid: 4290, tax_amount: 390, status: 'paid' }, { created_at: nowS - 7200, amount_paid: 3900, status: 'refunded', refunded_amount: 3900 }], pagination: { next_page: null } },
+    };
+    const urls = [];
+    const fetch = async (u, init) => { urls.push(u); expect(init.headers['x-api-key']).toBe('creem_k'); return new Response(JSON.stringify(pages[new URL(u).searchParams.get('product_id')])); };
+    expect(await creemRevenue({ apiKey: 'creem_k', productIds: ['prod_month', 'prod_life'], now, fetch })).toEqual({ revenue: 44.99, sales: 2 });
+    expect(urls[0]).toMatch(/^https:\/\/api\.creem\.io\/v1\/transactions\/search\?product_id=prod_month/);
   });
   it('API errors explain what to check', async () => {
     await expect(lemonSqueezyRevenue({ apiKey: 'k', storeId: '1', now, fetch: async () => new Response('', { status: 401 }) })).rejects.toThrow(/LEMONSQUEEZY_API_KEY/);

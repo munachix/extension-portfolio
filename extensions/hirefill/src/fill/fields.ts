@@ -101,6 +101,8 @@ export function collectFields(root: ParentNode = document): Field[] {
     const type = (el as HTMLInputElement).type?.toLowerCase() ?? '';
     if (tag === 'INPUT' && ['hidden', 'submit', 'button', 'image', 'reset', 'search', 'password'].includes(type)) continue;
     if ((el as HTMLInputElement).disabled || (el as HTMLInputElement).readOnly && type !== 'file' && el.getAttribute('role') !== 'combobox') continue;
+    // Hidden helper inputs (react-select's "requiredInput", honeypots): not for people, so not for us.
+    if (el.getAttribute('aria-hidden') === 'true' && el.tabIndex < 0 && type !== 'file') continue;
     if (/recaptcha|captcha|honeypot/i.test(`${el.id} ${(el as HTMLInputElement).name ?? ''} ${el.className}`)) continue;
     if (!visible(el)) continue;
     const automationId = el.getAttribute('data-automation-id') ?? el.closest('[data-automation-id]')?.getAttribute('data-automation-id') ?? '';

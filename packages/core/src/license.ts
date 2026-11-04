@@ -22,7 +22,13 @@ export interface LicenseConfig {
   /** Creem: base URL of our license server, e.g. https://license.yourbrand.com */
   licenseServerUrl?: string;
   /** Creem (prod_…) or Lemon Squeezy (number): product the key must belong to. */
-  productId?: string | number;
+  productId?: string | number | null;
+  /**
+   * Several products that unlock this extension (e.g. monthly + lifetime).
+   * With one license server for every extension, this is what stops a key bought
+   * for one extension from unlocking another.
+   */
+  productIds?: (string | number)[];
   /** Polar: organization id (required for Polar validation). */
   organizationId?: string;
   /** Polar: benefit id the key must belong to (optional). */
@@ -60,6 +66,16 @@ interface VerifyOpts { fetch?: FetchFn; now?: number; dev?: boolean; instanceId?
 
 const invalid = (error: string): LicenseResult => ({ valid: false, plan: 'free', expiresAt: null, error });
 
+/** Product ids this extension accepts; empty means "any" (dev builds only — release refuses it). */
+export function acceptedProducts(config: Pick<LicenseConfig, 'productId' | 'productIds'>): string[] {
+  return [...(config.productIds ?? []), ...(config.productId != null ? [config.productId] : [])].map(String).filter(Boolean);
+}
+
+function productOk(config: LicenseConfig, id: string | number | null | undefined): boolean {
+  const ok = acceptedProducts(config);
+  return ok.length === 0 || (id != null && ok.includes(String(id)));
+}
+
 function notExpired(expiresAt: string | null | undefined, now: number): boolean {
   return !expiresAt || Date.parse(expiresAt) > now;
 }
@@ -91,7 +107,7 @@ export async function verifyLicense(rawKey: string, config: LicenseConfig, opts:
     if (res.status >= 500) throw new Error(`License server returned ${res.status}`);
     const data = (await res.json().catch(() => ({}))) as { valid?: boolean; error?: string; expiresAt?: string | null; instanceId?: string; productId?: string };
     if (!data.valid) return invalid(data.error || 'That key is not valid.');
-    if (config.productId != null && data.productId && String(data.productId) !== String(config.productId)) return invalid('This key is for a different product.');
+    if (!productOk(config, data.productId)) return invalid('This key is for a different product.');
     if (!notExpired(data.expiresAt, now)) return invalid('This key has expired.');
     return { valid: true, plan: 'pro', expiresAt: data.expiresAt ?? null, instanceId: data.instanceId ?? opts.instanceId };
   }
@@ -109,7 +125,7 @@ export async function verifyLicense(rawKey: string, config: LicenseConfig, opts:
       meta?: { product_id?: number | string };
     };
     if (!data.valid) return invalid(data.error || 'That key is not valid.');
-    if (config.productId != null && String(data.meta?.product_id) !== String(config.productId)) {
+    if (!productOk(config, data.meta?.product_id)) {
       return invalid('This key is for a different product.');
     }
     const status = data.license_key?.status;

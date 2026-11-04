@@ -1,7 +1,7 @@
 import { downloadText, isPro, toCsv } from '@ext/core';
 import { renderPaywall } from '@ext/ui';
 import { findCauses, parsePasted, toCents } from '../engine';
-import { LICENSE, PRICE, PRO_FEATURES, PRODUCT } from '../settings';
+import { FREE_FEATURES, LICENSE, PRICE, PRO_FEATURES, PRODUCT } from '../settings';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 async function init() {
@@ -19,6 +19,6 @@ async function init() {
     ($('csv') as HTMLButtonElement).hidden = !last.length;
   });
   $('csv').addEventListener('click', () => downloadText('reconfinder-candidates.csv', toCsv(last.map((s) => ({ kind: s.kind, suggestion: s.title, detail: s.detail })), ['kind', 'suggestion', 'detail'])));
-  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, onChange: () => location.reload() });
+  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, freeText: FREE_FEATURES, onChange: () => location.reload() });
 }
 void init();

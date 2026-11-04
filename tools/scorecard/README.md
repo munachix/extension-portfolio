@@ -29,7 +29,7 @@ Leave the date off to use today. Until this is set, the extension shows "Launch 
 
    `hours_spent` is how many hours you or I spent on it that week. Add `week=2026-11-02` to fill in an earlier week. Running it again for the same week updates that week.
 3. Add revenue, either automatically (step 4) or by hand: `revenue_30d_usd=58 sales_30d=3`.
-4. *(Optional)* Pull revenue automatically: copy `.env.example` to `.env`, fill in your Lemon Squeezy key and store id, put each extension's product id in `data/projects.json` as `"lemonsqueezyProductId": 123456` (or `"polarProductId"`), then run:
+4. *(Optional)* Pull revenue automatically from Creem: copy `.env.example` to `.env` and paste your Creem API key as `CREEM_API_KEY`. The product ids are read from each `extensions/<slug>/extension.config.json` (`license.productIds`, the same ids the license check uses). Then run:
 
    ```bash
    pnpm scorecard import-revenue
@@ -71,3 +71,11 @@ Health warnings always come first: uninstalls over 40% of installs, a rating und
 - `dashboard.html`: generated each run; opens offline.
 
 The revenue import was tested against recorded API responses, not your live accounts. If it errors on the first real run, send me the message.
+
+## Where it runs (no hosting needed)
+
+The scorecard is a command plus a static `dashboard.html`. Run it on your own computer each Monday: there is nothing to host, nothing to pay for and nobody else can see your revenue. The data (`data/metrics.csv`) lives in the git repo, so it's backed up when you push to your **private** GitHub repo.
+
+Don't publish `dashboard.html` on the public website: it shows your sales. If you later want to see it on your phone, put it on Cloudflare Pages behind Cloudflare Access (free for up to 50 people); ask me and I'll set it up.
+
+Chrome Web Store stats have no API, so the Monday numbers (impressions, installs, users) are always copied from the Developer Dashboard by hand (or with `import-cws`). That's the 10 minutes.

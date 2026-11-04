@@ -4,7 +4,7 @@ import { watchPage } from '@ext/job-sites';
 import { outcome, PLATFORMS, priceForProfit, type Platform } from '../fees';
 import { isSoldPage, platformOf, queryFromTitle, readListing, readSoldPrices, soldSearchUrls } from '../page';
 import { summarize, type Stats } from '../stats';
-import { fees, inventory, prefs } from '../settings';
+import { fees, FREE_SOLD_PER_DAY, inventory, prefs, useSoldSummary } from '../settings';
 
 declare global { interface Window { __fcLoaded?: boolean } }
 
@@ -70,18 +70,19 @@ async function renderListing(platform: Platform, title: string, price: number | 
     const save = el('button', { textContent: '☆ Save to inventory' });
     save.addEventListener('click', async () => { await inventory.add({ title, url: location.href, platform, cost: Number(costIn.value) || 0, price: Number(priceIn.value) || 0, savedAt: new Date().toISOString() }); save.textContent = '★ Saved'; });
     act.append(save);
-  } else act.append(el('span', { className: 'mut' }, el('span', { className: 'pro', textContent: 'PRO' }), ' Price for your target profit, sold-page median & inventory log'));
+  } else act.append(el('span', { className: 'mut' }, el('span', { className: 'pro', textContent: 'PRO' }), ' Price for your target profit, unlimited sold summaries & inventory log'));
   box.append(act, el('div', { className: 'mut', textContent: 'US fees. Not affiliated with eBay, Poshmark, Mercari, Depop or Etsy.' }));
 }
 
-async function renderSold(platform: Platform, stats: Stats | null) {
+async function renderSold(platform: Platform, stats: Stats | null, query: string) {
   const pro = await isPro();
+  const allowance = pro || !stats ? { ok: true, left: Infinity } : await useSoldSummary(query);
   const r = root();
   r.replaceChildren(el('style', { textContent: CSS }));
   const box = el('div', { className: 'box' }, el('div', { className: 'hd' }, el('span', { textContent: 'FlipComps · sold on this page' })));
   if (!stats) box.append(el('div', { className: 'mut', textContent: 'No sold prices found on this page yet. Scroll or change filters.' }));
-  else if (!pro) box.append(el('div', { className: 'stats' }, el('b', { textContent: `${stats.count} sold items` }), el('div', { className: 'mut' }, el('span', { className: 'pro', textContent: 'PRO' }), ' See the median, typical range and low/high, with outliers removed.')));
-  else box.append(el('div', { className: 'stats' }, el('div', {}, 'Median ', el('b', { textContent: money(stats.median) })), el('div', { textContent: `Typical: ${money(stats.p25)} – ${money(stats.p75)} · range ${money(stats.low)} – ${money(stats.high)}` }), el('div', { className: 'mut', textContent: `${stats.used} of ${stats.count} sold items used (${stats.count - stats.used} outliers removed). Prices shown on this page only.` })));
+  else if (!allowance.ok) box.append(el('div', { className: 'stats' }, el('b', { textContent: `${stats.count} sold items` }), el('div', { className: 'mut' }, `You’ve used today’s ${FREE_SOLD_PER_DAY} free summaries (searches you already opened today still work). `, el('span', { className: 'pro', textContent: 'PRO' }), ' Unlimited, from the FlipComps menu.')));
+  else box.append(el('div', { className: 'stats' }, el('div', {}, 'Median ', el('b', { textContent: money(stats.median) })), el('div', { textContent: `Typical: ${money(stats.p25)} – ${money(stats.p75)} · range ${money(stats.low)} – ${money(stats.high)}` }), el('div', { className: 'mut', textContent: `${stats.used} of ${stats.count} sold items used (${stats.count - stats.used} outliers removed). Prices shown on this page only.` }), pro ? '' : el('div', { className: 'mut', textContent: `Free: ${allowance.left} more new searches today.` })));
   r.append(box);
 }
 
@@ -94,7 +95,7 @@ async function main() {
     if (isSoldPage(url)) {
       const prices = readSoldPrices(document, platform);
       const key = `sold|${url.href}|${prices.length}`;
-      if (key !== last) { last = key; void renderSold(platform, summarize(prices)); }
+      if (key !== last) { last = key; void renderSold(platform, summarize(prices), url.searchParams.get('_nkw') ?? url.searchParams.get('keyword') ?? url.searchParams.get('query') ?? url.searchParams.get('q') ?? url.pathname); }
       return;
     }
     const l = readListing(document, url);

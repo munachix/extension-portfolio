@@ -3,6 +3,7 @@ import { isPro } from '@ext/core';
 import { watchPage } from '@ext/job-sites';
 import { findCauses, fmt, type Suggestion } from '../engine';
 import { isReconcilePage, readDifference, readRows, tabTitle, type Row } from '../qbo';
+import { FREE_COMBO_RECS, useComboReconciliation } from '../settings';
 
 declare global { interface Window { __rfLoaded?: boolean } }
 const MARK = 'data-rf-suspect';
@@ -58,9 +59,11 @@ function render(diff: number | null, rows: Row[], sugg: Suggestion[], pro: boole
   const again = el('button', { className: 'btn', textContent: 'Check again' });
   again.addEventListener('click', rerun);
   act.append(again);
-  if (!pro) act.append(el('span', { className: 'mut' }, el('span', { className: 'pro', textContent: 'PRO' }), ' finds combinations of 2–3 transactions'));
+  if (!pro) act.append(el('span', { className: 'mut' }, comboNote ? `${comboNote} ` : '', el('span', { className: 'pro', textContent: 'PRO' }), ' combinations on every reconciliation'));
   box.append(act, el('div', { className: 'mut', textContent: 'ReconFinder never ticks or edits anything. Not affiliated with Intuit.' }));
 }
+
+let comboNote = '';
 
 async function main() {
   let lastKey = '';
@@ -74,7 +77,17 @@ async function main() {
     if (!force && key === lastKey) return;
     lastKey = key;
     const pro = await isPro();
-    const sugg = diff ? findCauses(rows.map((x) => x.tx), diff, { combos: pro }) : [];
+    // Free: simple causes always; combinations only if nothing simple explains it, on 3 reconciliations a month.
+    let sugg = diff ? findCauses(rows.map((x) => x.tx), diff, { combos: pro }) : [];
+    comboNote = '';
+    if (diff && !pro && !sugg.some((x) => x.score >= 85)) {
+      const withCombos = findCauses(rows.map((x) => x.tx), diff, { combos: true });
+      if (withCombos.some((x) => x.kind === 'combo')) {
+        const a = await useComboReconciliation(location.pathname + location.search);
+        if (a.ok) { sugg = withCombos; comboNote = `Free combination search: ${a.left} more reconciliation${a.left === 1 ? '' : 's'} this month.`; }
+        else comboNote = `A combination of transactions may explain this. You’ve used this month’s ${FREE_COMBO_RECS} free combination searches.`;
+      }
+    }
     style();
     document.querySelectorAll(`[${MARK}]`).forEach((e) => e.removeAttribute(MARK));
     const byId = new Map(rows.map((x) => [x.tx.id, x.el]));

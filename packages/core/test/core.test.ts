@@ -49,6 +49,14 @@ describe('verifyLicense: Creem (via our license server)', () => {
     await refreshLicenseIfStale(CREEM, { fetch: f, now: CACHE_MS + 1 });
     expect(calls[1]).toContain('/validate {"key":"KEY","instance_id":"ins_9"}');
   });
+  it('accepts any of several products (monthly + lifetime) and rejects keys for other extensions', async () => {
+    const MULTI: LicenseConfig = { provider: 'creem', licenseServerUrl: 'https://license.example.com', productIds: ['prod_month', 'prod_life'], checkoutUrl: 'https://x.test/buy' };
+    const answer = (productId?: string) => json({ valid: true, instanceId: 'i', productId, expiresAt: null }) as typeof fetch;
+    expect((await verifyLicense('k', MULTI, { fetch: answer('prod_life') })).valid).toBe(true);
+    expect((await verifyLicense('k', MULTI, { fetch: answer('prod_month') })).valid).toBe(true);
+    expect((await verifyLicense('k', MULTI, { fetch: answer('prod_other_extension') })).error).toMatch(/different product/);
+    expect((await verifyLicense('k', MULTI, { fetch: answer(undefined) })).valid).toBe(false);
+  });
   it('passes on the server error message; 5xx counts as unreachable', async () => {
     expect((await verifyLicense('k', CREEM, { fetch: json({ valid: false, error: 'This key has expired.' }) as typeof fetch })).error).toBe('This key has expired.');
     expect((await activateLicense('k', CREEM, { fetch: json({}, 502) as typeof fetch })).error).toMatch(/Couldn't reach/);

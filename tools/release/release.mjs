@@ -42,8 +42,25 @@ async function files(dir, base = dir) {
   return out;
 }
 
-export async function release(slug) {
+/** Things that make a store build unsellable (placeholders, no product ids). */
+export function launchProblems(config, dir = null) {
+  const out = [];
+  for (const f of config.launchFiles ?? []) {
+    if (dir && !existsSync(path.join(dir, f.path))) out.push(`${f.path} is missing: ${f.why}`);
+  }
+  const json = JSON.stringify(config);
+  if (/REPLACE-ME/.test(json)) out.push('extension.config.json still has REPLACE-ME placeholders (license server, checkout or data URL)');
+  const lic = config.license ?? {};
+  const ids = [...(lic.productIds ?? []), ...(lic.productId != null ? [lic.productId] : [])].filter(Boolean);
+  if (lic.provider === 'creem' && !ids.length) out.push('license.productIds is empty: any key from your store would unlock this extension');
+  return out;
+}
+
+export async function release(slug, { draft = false } = {}) {
   const { outDir, manifest, version, config, dir } = await buildExtension(slug, { prod: true });
+  const notReady = launchProblems(config, dir);
+  if (notReady.length && !draft) throw new Error(`Not ready for the store:\n  - ${notReady.join('\n  - ')}\n  (use "pnpm release ${slug} --draft" for a test zip)`);
+  if (notReady.length) console.warn(`⚠ Draft zip, not for upload:\n  - ${notReady.join('\n  - ')}`);
   const spec = parseSpecListing(await readFile(path.join(ROOT, config.spec), 'utf8'));
   const descFile = path.join(dir, 'store/description.md');
   const description = existsSync(descFile) ? (await readFile(descFile, 'utf8')).trim() : '';
@@ -79,7 +96,7 @@ ${listing.keywords}
 `);
 
   await mkdir(path.join(ROOT, 'dist'), { recursive: true });
-  const zipPath = path.join(ROOT, 'dist', `${slug}-${version}.zip`);
+  const zipPath = path.join(ROOT, "dist", `${slug}-${version}${draft ? "-DRAFT-not-for-upload" : ""}.zip`);
   const entries = await files(outDir);
   await writeFile(zipPath, zipSync(entries, { level: 9 }));
   const kb = ((await stat(zipPath)).size / 1024).toFixed(0);
@@ -91,5 +108,5 @@ ${listing.keywords}
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const slug = process.argv[2];
   if (!slug) { console.error('Usage: pnpm release <slug>'); process.exit(1); }
-  release(slug).catch((e) => { console.error(`✗ ${e.message}`); process.exit(1); });
+  release(slug, { draft: process.argv.includes('--draft') }).catch((e) => { console.error(`✗ ${e.message}`); process.exit(1); });
 }

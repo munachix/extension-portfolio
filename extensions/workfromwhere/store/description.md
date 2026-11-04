@@ -23,8 +23,11 @@ WHAT IT UNDERSTANDS
 • German job posts too: "Wohnsitz in Deutschland", "Remote aus Deutschland", "Arbeitserlaubnis für die EU", "ortsunabhängig"
 • Time-zone limits: "UTC-3 to UTC+3", "within 2 hours of CET", "9am–5pm EST"
 
-PRO ($4.99/month or $29 lifetime)
-• Badges on search-result lists, plus hiding the jobs you can't take
+FREE, NO LIMIT
+• The badge on every job post and on search-result lists, on 17 job sites, for any country
+
+PRO ($19 once, no subscription)
+• Hide the jobs you can't take from search results
 • See the required working hours in your own time zone ("9am–5pm ET = 3pm–11pm for you")
 • Save open jobs and export them to CSV
 • Your own phrase rules

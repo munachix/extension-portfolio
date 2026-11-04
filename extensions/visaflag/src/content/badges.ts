@@ -26,7 +26,9 @@ export function renderBadges(host: HTMLElement, company: string, results: Result
   const style = document.createElement('style');
   style.textContent = CSS;
   root.append(style);
-  for (const r of results) {
+  // Countries without data yet don't get a pill of their own (unless that's all there is).
+  const withData = results.filter((r) => r.status !== 'nodata');
+  for (const r of withData.length ? withData : results.slice(0, 1)) {
     const b = document.createElement('button');
     b.className = `p ${r.status}`;
     b.title = `${r.label}${r.official ? ` — registered as “${r.official}”` : ''}`;
@@ -65,7 +67,7 @@ function toggle(root: ShadowRoot, company: string, results: Result[], o: BadgeOp
   act.className = 'act';
   if (o.pro && o.onSave) { const s = document.createElement('button'); s.textContent = '☆ Save company'; s.addEventListener('click', () => { o.onSave!(); s.textContent = '★ Saved'; }); act.append(s); }
   const set = document.createElement('button');
-  set.textContent = o.pro ? 'Settings' : 'All 4 countries: Pro';
+  set.textContent = 'Settings';
   set.addEventListener('click', o.onSettings);
   act.append(set);
   pop.append(act);

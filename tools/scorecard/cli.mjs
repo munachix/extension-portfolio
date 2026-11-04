@@ -3,7 +3,7 @@
  * pnpm scorecard                         table + tools/scorecard/dashboard.html
  * pnpm scorecard --sample                same, using made-up sample data (to preview)
  * pnpm scorecard add <slug> impressions=320 installs=41 weekly_users=150 uninstalls=6 hours_spent=1.5 [week=2026-11-02]
- * pnpm scorecard import-revenue          last-30-day revenue from Lemon Squeezy / Polar (.env keys)
+ * pnpm scorecard import-revenue          last-30-day revenue from Creem (or Lemon Squeezy / Polar) (.env keys)
  * pnpm scorecard import-cws <slug> <file.csv>   Chrome Web Store dashboard export
  * pnpm scorecard launch <slug> [2026-11-10]      record the day it went live (default: today)
  * pnpm scorecard rewrote <slug>                  count a listing rewrite (title/summary/screenshots)
@@ -57,8 +57,15 @@ async function add() {
 async function revenue() {
   const env = await loadEnv(ROOT);
   const projects = await readJson(paths.projects);
+  // Creem product ids come straight from each extension's config (the same ids the license check uses).
+  for (const p of projects) {
+    try {
+      const cfg = JSON.parse(await readFile(path.join(ROOT, 'extensions', p.slug, 'extension.config.json'), 'utf8'));
+      if (cfg.license?.provider === 'creem' && cfg.license.productIds?.length && !p.creemProductIds) p.creemProductIds = cfg.license.productIds;
+    } catch { /* not an extension folder */ }
+  }
   const results = await importRevenue(projects, env);
-  if (!results.length) { console.log('No project has lemonsqueezyProductId or polarProductId in data/projects.json yet.'); return; }
+  if (!results.length) { console.log('No product ids yet: add your Creem product ids to extensions/<slug>/extension.config.json (license.productIds).'); return; }
   const rows = await readMetrics();
   const week = weekStart();
   for (const r of results) {

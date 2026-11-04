@@ -26,13 +26,14 @@ export interface SavedJob {
 export const LICENSE: LicenseConfig = {
   provider: cfg.license.provider as LicenseConfig['provider'],
   licenseServerUrl: cfg.license.licenseServerUrl,
-  productId: cfg.license.productId ?? undefined,
+  productIds: (cfg.license as { productIds?: string[] }).productIds,
   checkoutUrl: cfg.license.checkoutUrl,
 };
 export const PRODUCT = cfg.productName;
 export const PRICE = cfg.priceText;
+export const FREE_FEATURES = 'the badge on every job post and on search-result lists, on 17 job sites, for any country.';
 export const PRO_FEATURES = [
-  'Badges on search-result lists, and hide jobs you can’t take',
+  'Hide jobs you can’t take from search results',
   'See required hours in your own time zone',
   'Save open jobs and export them to CSV',
   'Your own phrase rules',

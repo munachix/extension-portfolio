@@ -11,6 +11,8 @@ export interface PaywallOptions {
   priceText: string;
   /** Bullet list of what Pro adds. */
   features: string[];
+  /** One line on what stays free, so people know they aren't being squeezed. */
+  freeText?: string;
   onChange?: (pro: boolean) => void;
 }
 
@@ -66,10 +68,13 @@ export async function renderPaywall(root: HTMLElement, opts: PaywallOptions): Pr
     }
   });
 
+  const free = opts.freeText ? [el('p', { className: 'x-muted', textContent: `Free forever: ${opts.freeText}` })] : [];
   root.append(
     el('h2', { textContent: `Upgrade to ${opts.productName} Pro` }),
+    ...free,
     list,
     buy,
+    el('p', { className: 'x-muted', textContent: 'Your key arrives by email right after you pay (from Creem, our payment provider). 14-day refund, no questions.' }),
     el('label', { textContent: 'Already bought? Enter your key' }),
     el('div', { className: 'x-row' }, input, activate),
     msg,

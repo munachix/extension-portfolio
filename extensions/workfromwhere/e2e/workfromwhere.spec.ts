@@ -68,12 +68,13 @@ test('SEEK: no rule in the text, so the location field decides', async () => {
   await expect(badge(page)).toHaveClass(/s-green/, { timeout: 5000 });
 });
 
-test('Free: no list badges. Pro (test key): list badges + hide restricted', async () => {
+test('Free: list badges, no hiding. Pro (test key): hide restricted', async () => {
   await serveFixture(h, 'https://weworkremotely.com/remote-jobs', fx('wwr-list.html'));
+  await setStorage(h, { ...NG, settings: { ...(NG as { settings: object }).settings, hideRed: true } });
   const page = await h.context.newPage();
   await page.goto('https://weworkremotely.com/remote-jobs');
-  await page.waitForTimeout(800);
-  await expect(page.locator('[data-wfw-pill]')).toHaveCount(0);
+  await expect(page.locator('[data-wfw-pill]')).toHaveCount(2, { timeout: 5000 });
+  await expect(page.locator('li.new-listing-container').first()).toBeVisible(); // hiding is Pro
 
   // Activate Pro through the real options page with the dev-only test key
   const opts = await h.context.newPage();
@@ -108,7 +109,7 @@ test('makes no network requests outside the page itself', async () => {
   expect(h.blocked).toEqual([]);
 });
 
-test('Pro list badges: exactly one pill per LinkedIn card', async () => {
+test('list badges: exactly one pill per LinkedIn card', async () => {
   await setStorage(h, { ...NG, license: { key: 'TEST-PRO-0000-0000', result: { valid: true, plan: 'pro', expiresAt: null }, checkedAt: Date.now() } });
   await serveFixture(h, 'https://www.linkedin.com/jobs/view/101/', fx('linkedin-job.html'));
   const page = await h.context.newPage();

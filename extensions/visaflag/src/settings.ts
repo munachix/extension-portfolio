@@ -3,7 +3,7 @@ import cfg from '../extension.config.json';
 import type { CC } from './countries';
 
 export interface Settings {
-  /** Free: the first one is used. Pro: all. */
+  /** Countries to check (all of them on every plan). */
   countries: CC[];
   listBadges: boolean;
   hideNonSponsors: boolean;
@@ -14,18 +14,18 @@ export interface SavedCompany { name: string; results: string; savedAt: string; 
 export const LICENSE: LicenseConfig = {
   provider: cfg.license.provider as LicenseConfig['provider'],
   licenseServerUrl: cfg.license.licenseServerUrl,
-  productId: cfg.license.productId ?? undefined,
+  productIds: (cfg.license as { productIds?: string[] }).productIds,
   checkoutUrl: cfg.license.checkoutUrl,
 };
 export const DATA_BASE = cfg.dataBaseUrl.replace(/\/$/, '');
 export const PRODUCT = cfg.productName;
 export const PRICE = cfg.priceText;
 export const PRO_FEATURES = [
-  'All 4 countries at once: US, UK, Canada, Netherlands',
-  'US: H-1B filings per year and median salary offered',
-  'Badges on search results, and hide companies that don’t sponsor',
-  'Search any company, save a list and export it to CSV',
+  'US: H-1B filings per year and the median salary offered',
+  'Hide companies that don’t sponsor from search results',
+  'Save companies to a shortlist and export it to CSV',
 ];
+export const FREE_FEATURES = 'sponsor badges for the US, UK, Canada and the Netherlands on job pages and search results, and company search.';
 
 const KEY = 'settings';
 export const defaults = (): Settings => ({ countries: ['us'], listBadges: true, hideNonSponsors: false });
@@ -38,8 +38,8 @@ export async function saveSettings(patch: Partial<Settings>): Promise<Settings> 
   await store.set(KEY, next);
   return next;
 }
-export function activeCountries(s: Settings, pro: boolean): CC[] {
-  return pro ? s.countries : s.countries.slice(0, 1);
+export function activeCountries(s: Settings, _pro?: boolean): CC[] {
+  return s.countries;
 }
 
 export const saved = {

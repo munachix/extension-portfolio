@@ -9,11 +9,13 @@ export interface Application { id: string; company: string; role: string; url: s
 export interface AISettings { mode: 'local' | 'byok' | 'off'; provider: 'openai' | 'anthropic' | 'gemini'; apiKey: string; model: string }
 export interface Settings { autoNextPage: boolean; showButton: boolean; ai: AISettings }
 
-export const LICENSE: LicenseConfig = { provider: cfg.license.provider as LicenseConfig['provider'], licenseServerUrl: cfg.license.licenseServerUrl, productId: cfg.license.productId ?? undefined, checkoutUrl: cfg.license.checkoutUrl };
-export const FREE_FILLS = cfg.freeFills;
+export const LICENSE: LicenseConfig = { provider: cfg.license.provider as LicenseConfig['provider'], licenseServerUrl: cfg.license.licenseServerUrl, productIds: (cfg.license as { productIds?: string[] }).productIds, checkoutUrl: cfg.license.checkoutUrl };
+/** AI drafts (tailoring, cover letters, answers) a free user can try. Autofill itself is free and unlimited. */
+export const FREE_AI = cfg.freeAi;
 export const PRODUCT = cfg.productName;
 export const PRICE = cfg.priceText;
-export const PRO_FEATURES = ['Unlimited autofills on Workday, Greenhouse, Lever, iCIMS, Taleo and more', 'CV tailoring with the truth guard, PDF + Word export', 'Cover letters and answer drafts', 'Pay once, use forever. 14-day refund.'];
+export const PRO_FEATURES = ['Unlimited CV tailoring with the truth guard, PDF + Word export', 'Unlimited cover letters and answer drafts', 'Works with Chrome’s free built-in AI or your own key', 'Pay once, use forever. 14-day refund.'];
+export const FREE_FEATURES = 'Autofill, Workday work history, the answer bank, the job tracker and keyword match are free with no limit.';
 export const DEFAULT_MODELS = { openai: 'gpt-4.1-mini', anthropic: 'claude-haiku-5-5', gemini: 'gemini-2.5-flash' } as const;
 
 export const db = {
@@ -29,6 +31,8 @@ export const db = {
   saveSettings: async (patch: Partial<Settings>) => store.set('settings', { ...(await db.settings()), ...patch }),
   fills: () => store.get<number>('fillCount', 0),
   countFill: () => store.update<number>('fillCount', 0, (n) => n + 1),
+  aiUses: () => store.get<number>('aiUses', 0),
+  countAi: () => store.update<number>('aiUses', 0, (n) => n + 1),
   cvText: () => store.get<string>('cvText', ''),
   saveCvText: (t: string) => store.set('cvText', t),
 };

@@ -6,11 +6,11 @@ ON ANY EBAY, POSHMARK, MERCARI, DEPOP OR ETSY LISTING
 • Uses current US fees: eBay 13.6% + per-order fee (category rates included), Poshmark $2.95 / 20%, Mercari 10%, Depop 3.3% + $0.45, Etsy 6.5% + processing
 
 ON SOLD RESULTS YOU OPEN
-• Free: how many sold items are on the page
-• Pro: median sold price, the typical range and low/high, with outliers (lots, parts, typos) removed
+• Median sold price, the typical range and low/high, with outliers (lots, parts, typos) removed
+• Free: 10 different searches a day (opening the same search again doesn't count). Pro: unlimited
 
-PRO ($5.99/month or $39 lifetime)
-• Sold-page summary
+PRO ($5.99/month or $39 once)
+• Unlimited sold-page summaries
 • "Price for my profit": the price you need on each platform to keep your target profit
 • Inventory log with cost and target price, export to CSV
 • Edit fee rates for your categories, boosted or promoted listings

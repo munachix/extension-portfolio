@@ -1,7 +1,7 @@
 import { downloadText, isPro, toCsv } from '@ext/core';
 import { renderPaywall } from '@ext/ui';
 import { DEFAULT_FEES, FEES_AS_OF, outcome, PLATFORMS } from '../fees';
-import { fees, inventory, LICENSE, PRICE, PRO_FEATURES, PRODUCT, prefs } from '../settings';
+import { fees, FREE_FEATURES, inventory, LICENSE, PRICE, PRO_FEATURES, PRODUCT, prefs } from '../settings';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const money = (n: number) => `${n < 0 ? '-' : ''}$${Math.abs(n).toFixed(2)}`;
@@ -43,6 +43,6 @@ async function init() {
   $('inv').textContent = pro ? `${inv.length} saved item(s)` : '';
   ($('csv') as HTMLButtonElement).hidden = !(pro && inv.length);
   $('csv').addEventListener('click', () => downloadText('flipcomps-inventory.csv', toCsv(inv as unknown as Record<string, unknown>[], ['title', 'platform', 'cost', 'price', 'url', 'savedAt'])));
-  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, onChange: () => location.reload() });
+  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, freeText: FREE_FEATURES, onChange: () => location.reload() });
 }
 void init();

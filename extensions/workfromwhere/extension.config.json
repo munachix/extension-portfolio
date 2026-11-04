@@ -2,11 +2,11 @@
   "slug": "workfromwhere",
   "productName": "WorkFromWhere",
   "spec": "specs/01-workfromwhere.md",
-  "priceText": "$4.99/mo or $29 lifetime",
+  "priceText": "$19 once",
   "license": {
     "provider": "creem",
     "licenseServerUrl": "https://license.REPLACE-ME.com",
-    "productId": null,
+    "productIds": [],
     "checkoutUrl": "https://www.creem.io/payment/prod_REPLACE-ME"
   },
   "storeExtensionId": "REPLACE-AFTER-FIRST-UPLOAD",

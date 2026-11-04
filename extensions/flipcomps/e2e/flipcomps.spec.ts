@@ -38,15 +38,22 @@ test('Poshmark listing price is read from page metadata', async () => {
   await expect(panel(p).locator('input').first()).toHaveValue('48', { timeout: 8000 });
 });
 
-test('Sold page: free shows the count; Pro shows median and typical range without outliers', async () => {
+test('Sold page: free gets the full summary 10 searches a day; repeats are free; Pro is unlimited', async () => {
   const p = await h.context.newPage();
   await p.goto(SOLD);
-  await expect(panel(p)).toContainText('10 sold items', { timeout: 8000 });
+  await expect(panel(p)).toContainText('Median $61.00', { timeout: 8000 });
+  await expect(panel(p)).toContainText('8 of 10 sold items used (2 outliers removed)');
+  await expect(panel(p)).toContainText('Free: 9 more new searches today');
+  await p.reload(); // same search again: not counted twice
+  await expect(panel(p)).toContainText('Free: 9 more new searches today', { timeout: 8000 });
+  const today = new Date().toISOString().slice(0, 10);
+  await setStorage(h, { soldAllowance: { day: today, queries: Array.from({ length: 10 }, (_, i) => `other ${i}`) } });
+  await p.reload();
+  await expect(panel(p)).toContainText('used today’s 10 free summaries', { timeout: 8000 });
   await expect(panel(p)).not.toContainText('Median');
   await setStorage(h, { license: PRO });
   await p.reload();
   await expect(panel(p)).toContainText('Median $61.00', { timeout: 8000 });
-  await expect(panel(p)).toContainText('8 of 10 sold items used (2 outliers removed)');
 });
 
 test('Pro: target-profit price and saving to inventory', async () => {

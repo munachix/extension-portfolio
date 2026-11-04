@@ -2,20 +2,32 @@
   "slug": "visaflag",
   "productName": "VisaFlag",
   "spec": "specs/02-visaflag.md",
-  "priceText": "$5.99/mo or $39 lifetime",
+  "priceText": "$24 once",
   "dataBaseUrl": "https://REPLACE-ME.github.io/extension-portfolio/visaflag",
   "license": {
     "provider": "creem",
     "licenseServerUrl": "https://license.REPLACE-ME.com",
-    "productId": null,
+    "productIds": [],
     "checkoutUrl": "https://www.creem.io/payment/prod_REPLACE-ME"
   },
   "storeExtensionId": "REPLACE-AFTER-FIRST-UPLOAD",
-  "sites": ["linkedin", "indeed", "glassdoor", "reed", "stepstone"],
+  "sites": [
+    "linkedin",
+    "indeed",
+    "glassdoor",
+    "reed",
+    "stepstone"
+  ],
   "entries": {
     "content": "src/content/index.ts",
     "popup": "src/popup/popup.ts",
     "options": "src/options/options.ts",
     "background": "src/background.ts"
-  }
+  },
+  "launchFiles": [
+    {
+      "path": "pipeline/data/sponsors-us.json.gz",
+      "why": "US H-1B data. Download the DOL LCA disclosure file in your browser and run pnpm visaflag:us <file> (see extensions/visaflag/README.md)"
+    }
+  ]
 }

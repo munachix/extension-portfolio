@@ -1,6 +1,6 @@
 /**
  * Importers:
- *  - revenue from the Lemon Squeezy / Polar APIs (last 30 days, per product)
+ *  - revenue from the Creem / Lemon Squeezy / Polar APIs (last 30 days, per product)
  *  - a Chrome Web Store dashboard CSV export (daily rows -> weekly)
  */
 import { readFile } from 'node:fs/promises';
@@ -73,11 +73,41 @@ export async function polarRevenue({ token, organizationId, productId, now = new
   return { revenue: Math.round(revenue * 100) / 100, sales };
 }
 
+/**
+ * Creem: paid transactions for the given products in the last 30 days.
+ * Revenue = amount paid − tax − refunds (before Creem's own fee). Amounts are in cents.
+ */
+export async function creemRevenue({ apiKey, productIds, now = new Date(), fetch: f = fetch }) {
+  const since = now.getTime() - 30 * DAY;
+  const base = apiKey.startsWith('creem_test_') ? 'https://test-api.creem.io' : 'https://api.creem.io';
+  let revenue = 0, sales = 0;
+  for (const productId of productIds) {
+    for (let page = 1; page <= 50; page++) {
+      const q = new URLSearchParams({ product_id: productId, page_number: String(page), page_size: '100' });
+      const res = await f(`${base}/v1/transactions/search?${q}`, { headers: { Accept: 'application/json', 'x-api-key': apiKey } });
+      if (!res.ok) throw new Error(`Creem returned ${res.status}. Check CREEM_API_KEY in .env.`);
+      const body = await res.json();
+      for (const t of body.items ?? []) {
+        const at = typeof t.created_at === 'number' ? (t.created_at < 1e12 ? t.created_at * 1000 : t.created_at) : Date.parse(t.created_at);
+        if (at < since) continue;
+        if (!['paid', 'partialRefund'].includes(t.status)) continue;
+        revenue += ((t.amount_paid ?? t.amount ?? 0) - (t.tax_amount ?? 0) - (t.refunded_amount ?? 0)) / 100;
+        sales += 1;
+      }
+      if (!body.pagination?.next_page) break;
+    }
+  }
+  return { revenue: Math.round(revenue * 100) / 100, sales };
+}
+
 /** Revenue for every project that has a provider product id. */
 export async function importRevenue(projects, env, { now = new Date(), fetch: f = fetch } = {}) {
   const results = [];
   for (const p of projects) {
-    if (p.lemonsqueezyProductId != null) {
+    if (p.creemProductIds?.length) {
+      if (!env.CREEM_API_KEY) throw new Error('Add CREEM_API_KEY to .env (Creem dashboard → Developers → API keys)');
+      results.push({ slug: p.slug, provider: 'Creem', ...(await creemRevenue({ apiKey: env.CREEM_API_KEY, productIds: p.creemProductIds, now, fetch: f })) });
+    } else if (p.lemonsqueezyProductId != null) {
       if (!env.LEMONSQUEEZY_API_KEY || !env.LEMONSQUEEZY_STORE_ID) throw new Error('Add LEMONSQUEEZY_API_KEY and LEMONSQUEEZY_STORE_ID to .env');
       results.push({ slug: p.slug, provider: 'Lemon Squeezy', ...(await lemonSqueezyRevenue({ apiKey: env.LEMONSQUEEZY_API_KEY, storeId: env.LEMONSQUEEZY_STORE_ID, productId: p.lemonsqueezyProductId, now, fetch: f })) });
     } else if (p.polarProductId) {

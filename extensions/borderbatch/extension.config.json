@@ -3,11 +3,11 @@
   "productName": "BorderBatch",
   "spec": "specs/04-borderbatch.md",
   "priceText": "$12 once",
-  "freeBatch": 5,
+  "freeBatch": 20,
   "license": {
     "provider": "creem",
     "licenseServerUrl": "https://license.REPLACE-ME.com",
-    "productId": null,
+    "productIds": [],
     "checkoutUrl": "https://www.creem.io/payment/prod_REPLACE-ME"
   },
   "storeExtensionId": "REPLACE-AFTER-FIRST-UPLOAD",

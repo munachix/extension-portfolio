@@ -31,6 +31,11 @@ describe('Matcher', () => {
   it('a brand matches the registered name that starts with it', () => {
     expect(m.lookup('Monzo')).toMatchObject({ kind: 'likely', rows: [3] });
   });
+  it('names written without spaces (live LinkedIn: "JPMorganChase")', () => {
+    const mm = new Matcher(['JPMorgan Chase Bank, National Association', 'JP Morgan Travel Ltd']);
+    expect(mm.lookup('JPMorganChase')).toMatchObject({ kind: 'likely', rows: [0] });
+    expect(mm.lookup('JPMorganChaseX')).toBeNull();
+  });
   it('unrelated names do not match', () => {
     expect(m.lookup('Acne Studios')).toBeNull();
     expect(m.lookup('')).toBeNull();

@@ -140,13 +140,17 @@ test('Workday: dropdowns, work history with Add + dates, and the next page after
   expect(await page.evaluate(() => (window as unknown as { __submits: number }).__submits)).toBe(0);
 });
 
-test('Free plan: after 15 fills HireFill asks to upgrade instead of filling', async () => {
-  await seed({ fillCount: 15 });
+test('Free plan: autofill never runs out; AI drafts stop after the free tries', async () => {
+  await seed({ fillCount: 500, aiUses: 5 });
   const page = await h.context.newPage();
   await page.goto(GH);
   await fillButton(page).click();
-  await expect(page.locator('[data-hf-ui]')).toContainText('used your 15 free fills');
-  await expect(page.locator('#first_name')).toHaveValue('');
+  await expect(page.locator('#first_name')).toHaveValue('Jane', { timeout: 10000 });
+  const app = await h.context.newPage();
+  await app.goto(`chrome-extension://${h.extensionId}/app.html?tab=Tailor`);
+  await expect(app.locator('body')).toContainText('used the 5 free AI drafts');
+  await app.getByRole('button', { name: 'Draft answer' }).click();
+  await expect(app.locator('body')).toContainText('Free AI drafts used up');
 });
 
 test('Pro: unlimited fills; tailored CV export downloads a PDF', async () => {

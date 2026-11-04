@@ -120,6 +120,18 @@ export class Matcher {
       if (cand.key.startsWith(`${k} `) && (!prefix || cand.key.length < prefix.len)) prefix = { i: cand.i, len: cand.key.length };
     }
     if (prefix) return { kind: 'likely', rows: [prefix.i], score: 0.95 };
+    // Spacing differs: "JPMorganChase" (LinkedIn) -> "JPMorgan Chase Bank, National Association".
+    const compact = k.replace(/ /g, '');
+    for (const cand of bucket) {
+      const words = cand.key.split(' ');
+      let joined = '';
+      for (const w of words) {
+        joined += w;
+        if (joined.length >= compact.length) break;
+      }
+      if (joined === compact && cand.key !== k && (!prefix || cand.key.length < prefix.len)) prefix = { i: cand.i, len: cand.key.length };
+    }
+    if (prefix) return { kind: 'likely', rows: [prefix.i], score: 0.94 };
     let best: { i: number; s: number } | null = null;
     for (const cand of bucket) {
       if (Math.abs(cand.key.length - k.length) > 6) continue;

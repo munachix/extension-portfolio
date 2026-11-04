@@ -4,7 +4,7 @@ import { renderPaywall } from '@ext/ui';
 import { zipSync } from 'fflate';
 import { PRESETS, suggestTiles } from '../process/layout';
 import type { Done, Job } from '../process/worker';
-import { DEFAULT_LOOK, FREE_BATCH, LICENSE, looks, PRICE, PRO_FEATURES, PRODUCT, type Look } from '../settings';
+import { DEFAULT_LOOK, FREE_BATCH, FREE_FEATURES, LICENSE, looks, PRICE, PRO_FEATURES, PRODUCT, type Look } from '../settings';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 let look: Look = DEFAULT_LOOK;
@@ -107,7 +107,7 @@ function renderList() {
     return row;
   }));
   const done = items.some((i) => i.status === 'done');
-  ($('zip') as HTMLButtonElement).hidden = !(pro && done);
+  ($('zip') as HTMLButtonElement).hidden = !done;
   ($('go') as HTMLButtonElement).disabled = !items.some((i) => i.status === 'waiting');
   $('count').textContent = items.length ? `${items.length} photo(s)` : '';
 }
@@ -181,7 +181,7 @@ async function init() {
   $('zip').addEventListener('click', () => void downloadZip());
   $('clear').addEventListener('click', () => { items.forEach((i) => i.outputs.forEach((o) => URL.revokeObjectURL(o.url))); items = []; $('msg').textContent = ''; renderList(); });
   $('saveLook').addEventListener('click', async () => { const n = prompt('Name this look (e.g. “My IG style”)'); if (n) { await looks.saveNamed(n.slice(0, 30), look); await savedLooksUi(); } });
-  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, onChange: () => location.reload() });
+  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, freeText: FREE_FEATURES, onChange: () => location.reload() });
   renderList();
 }
 

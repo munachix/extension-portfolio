@@ -9,7 +9,7 @@ import { parseCvText } from '../profile/parse-cv';
 import { DECLINE, type Profile, type Work } from '../profile/schema';
 import { exportDocx, exportPdf } from '../resume/export';
 import { keywordMatch } from '../resume/keywords';
-import { cvFileName, db, DEFAULT_MODELS, fileToStored, FREE_FILLS, LICENSE, PRICE, PRO_FEATURES, PRODUCT, type AISettings, type Application } from '../store';
+import { cvFileName, db, DEFAULT_MODELS, fileToStored, FREE_AI, FREE_FEATURES, LICENSE, PRICE, PRO_FEATURES, PRODUCT, type AISettings, type Application } from '../store';
 
 type Props = Record<string, unknown>;
 const h = <K extends keyof HTMLElementTagNameMap>(tag: K, props: Props = {}, ...kids: (Node | string | null | false | undefined)[]) => {
@@ -73,13 +73,12 @@ async function setup(): Promise<HTMLElement[]> {
     } catch (e) { msg.className = 'x-msg err'; msg.textContent = (e as Error).message; }
   });
   const used = await db.fills();
-  const pro = await isPro();
   return [
     card('1. Upload your CV', muted('PDF or Word. It’s read on your computer and never uploaded.'), input, msg, resume ? muted(`Current CV: ${resume.name}`) : null),
     card('2. Check your profile', muted(p.email ? `${p.firstName} ${p.lastName} · ${p.email}` : 'Not set up yet.'), btn('Open Profile', () => { tab = 'Profile'; void show(); })),
     card('3. Answer the common questions once', muted('Work authorization, sponsorship, salary, notice period…'), btn('Open Questions', () => { tab = 'Questions'; void show(); })),
     card('4. Fill an application', muted('Open any job application (Workday, Greenhouse, Lever, iCIMS…). Click “⚡ Fill with HireFill” on the page, or the button below.'), btn('Fill the current tab', async () => { await askTab({ type: 'hf:fill' }); }, true),
-      muted(pro ? 'HireFill Pro: unlimited fills.' : `Free fills used: ${used} of ${FREE_FILLS}.`)),
+      muted(`Autofill is free with no limit${used ? ` (${used} application${used === 1 ? '' : 's'} filled so far)` : ''}.`)),
   ];
 }
 
@@ -168,6 +167,17 @@ async function tailor(): Promise<HTMLElement[]> {
   const settings = await db.settings();
   const p = await db.profile();
   const out: HTMLElement[] = [];
+  // Free users can try the AI help a few times before buying.
+  const trialLeft = async () => (pro ? Infinity : Math.max(0, FREE_AI - (await db.aiUses())));
+  const trialNote = h('p', { className: 'x-muted' });
+  const showTrial = async () => { const n = await trialLeft(); trialNote.textContent = pro ? '' : n > 0 ? `${n} of ${FREE_AI} free AI drafts left. HireFill Pro makes them unlimited.` : `You’ve used the ${FREE_AI} free AI drafts. HireFill Pro ($39 once) makes them unlimited; autofill stays free.`; };
+  await showTrial();
+  const allowAi = async (msg: HTMLElement) => {
+    if ((await trialLeft()) > 0) return true;
+    msg.className = 'x-msg err'; msg.textContent = 'Free AI drafts used up. Get HireFill Pro in Settings to keep going.';
+    return false;
+  };
+  const usedAi = async () => { if (!pro) { await db.countAi(); await showTrial(); } };
   const jobBox = h('textarea', { placeholder: 'Open the job post in this tab and click “Load job post”, or paste the description here.' });
   const company = h('input', { type: 'text', placeholder: 'Company' });
   const role = h('input', { type: 'text', placeholder: 'Role' });
@@ -191,7 +201,7 @@ async function tailor(): Promise<HTMLElement[]> {
   const tailored: Profile = structuredClone(p);
   const suggestions = h('div');
   const run = async () => {
-    if (!pro) { aiMsg.className = 'x-msg err'; aiMsg.textContent = 'CV tailoring is part of HireFill Pro.'; return; }
+    if (!(await allowAi(aiMsg))) return;
     if (!jobBox.value.trim()) { aiMsg.className = 'x-msg err'; aiMsg.textContent = 'Load or paste the job post first.'; return; }
     aiMsg.className = 'x-msg'; aiMsg.textContent = 'Rewriting your bullets…';
     suggestions.replaceChildren();
@@ -210,6 +220,7 @@ async function tailor(): Promise<HTMLElement[]> {
           h('label', { className: 'x-check' }, accept, 'Use this version')));
       } catch (e) { aiMsg.className = 'x-msg err'; aiMsg.textContent = (e as Error).message; return; }
     }
+    await usedAi();
     aiMsg.className = 'x-msg ok'; aiMsg.textContent = 'Review each change, then export.';
   };
   const exportBox = h('div', { className: 'x-row' });
@@ -222,7 +233,7 @@ async function tailor(): Promise<HTMLElement[]> {
     if (attach) { await db.saveFile('tailored', await fileToStored(new File([blob], name, { type: blob.type }))); aiMsg.className = 'x-msg ok'; aiMsg.textContent = `${name} will be attached to your next applications (until you clear it in Settings).`; }
   };
   exportBox.append(btn('Download PDF', () => save('pdf', false)), btn('Download Word', () => save('docx', false)), btn('Use for applications', () => save('pdf', true), true));
-  out.push(card('Tailor my CV to this job', muted(aiNote), muted('Rewrites and reorders only what you actually did. Anything new (employers, numbers, dates) is flagged and left out.'), btn('Suggest changes', run, true), aiMsg, suggestions, exportBox));
+  out.push(card('Tailor my CV to this job', muted(aiNote), muted('Rewrites and reorders only what you actually did. Anything new (employers, numbers, dates) is flagged and left out.'), trialNote, btn('Suggest changes', run, true), aiMsg, suggestions, exportBox));
 
   const tone = h('select', {}, ...['formal', 'warm', 'short'].map((t) => h('option', { value: t, textContent: t })));
   const letter = h('textarea', { style: 'min-height:220px' });
@@ -230,11 +241,12 @@ async function tailor(): Promise<HTMLElement[]> {
   const ans = h('textarea');
   const writeMsg = h('div', { className: 'x-msg', role: 'status' });
   const gen = async (prompt: string, target: HTMLTextAreaElement) => {
-    if (!pro) { writeMsg.className = 'x-msg err'; writeMsg.textContent = 'Writing help is part of HireFill Pro.'; return; }
+    if (!(await allowAi(writeMsg))) return;
     writeMsg.className = 'x-msg'; writeMsg.textContent = 'Writing…';
     try {
       const text = await complete(settings.ai, prompt);
       target.value = text.trim();
+      await usedAi();
       const g = truthGuard(text, `${profileText(p)}\n${await db.cvText()}`, jobBox.value);
       writeMsg.className = g.ok ? 'x-msg ok' : 'x-msg err';
       writeMsg.textContent = g.ok ? 'Draft ready. Edit it before using.' : `Check these — not in your profile: ${[...new Set(g.sentences.flatMap((s) => s.unknown))].slice(0, 8).join(', ')}`;
@@ -287,7 +299,7 @@ async function settings(): Promise<HTMLElement[]> {
   const show = h('input', { type: 'checkbox', checked: s.showButton });
   show.addEventListener('change', () => db.saveSettings({ showButton: show.checked }));
   const pay = h('section');
-  await renderPaywall(pay, { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES });
+  await renderPaywall(pay, { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, freeText: FREE_FEATURES });
   const tailoredFile = await db.file('tailored');
   return [
     pay,

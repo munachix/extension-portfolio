@@ -2,7 +2,7 @@ import { isPro } from '@ext/core';
 import { ADAPTERS } from '@ext/job-sites';
 import { renderPaywall } from '@ext/ui';
 import { mountProfileForm } from '../form';
-import { LICENSE, PRICE, PRO_FEATURES, PRODUCT, loadSettings, saveSettings } from '../settings';
+import { LICENSE, PRICE, PRO_FEATURES, FREE_FEATURES, PRODUCT, loadSettings, saveSettings } from '../settings';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const lines = (s: string) => s.split('\n').map((l) => l.trim()).filter(Boolean);
@@ -28,7 +28,7 @@ async function proSettings() {
 
 async function init() {
   await mountProfileForm($('profile'));
-  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, onChange: () => void proSettings() });
+  await renderPaywall($('pro'), { config: LICENSE, productName: PRODUCT, priceText: PRICE, features: PRO_FEATURES, freeText: FREE_FEATURES, onChange: () => void proSettings() });
   await proSettings();
   $('sites').textContent = ADAPTERS.map((a) => a.label).join(' · ');
 }

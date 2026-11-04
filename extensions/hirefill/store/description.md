@@ -1,9 +1,9 @@
-Fill job applications in seconds, including Workday. HireFill is a job application autofill and resume tailor that you pay for once. No subscription.
+Fill job applications in seconds, including Workday. Autofill is free with no limit. HireFill Pro adds AI CV tailoring and cover letters for a one-time $39. No subscription.
 
 Upload your CV once. HireFill reads it on your computer and fills applications on Workday, Greenhouse, Lever, iCIMS, Taleo, SmartRecruiters, Ashby, BambooHR, Workable, JazzHR, SuccessFactors, LinkedIn Easy Apply and Indeed.
 
 WHY HIREFILL
-• Pay once, use forever: $39 (early-bird $29), 14-day refund. No weekly or monthly fees.
+• Free autofill with no limit, no account and no sign-up. Pro is $39 once, 14-day refund. No weekly or monthly fees.
 • Built for the hard portals: dedicated Workday handling adds your work history entries, fills month/year dates and custom dropdowns, and continues on the next page after you click Next.
 • Never invents anything: CV tailoring only rephrases and reorders what you actually did. A truth guard flags any employer, number or date that isn't in your profile.
 • Never submits: HireFill fills, you review, you click Submit. It refuses to click Submit/Apply buttons, so your accounts stay safe.
@@ -21,6 +21,7 @@ FEATURES
 • Application tracker: every application logged automatically, statuses, follow-up reminders, CSV export
 • AI that costs nothing: uses Chrome's built-in AI on supported computers, or your own OpenAI, Claude or Gemini key, or no AI at all (autofill works fully without it)
 
-FREE: 15 complete autofills to try everything.
+FREE, NO LIMIT: autofill on every portal, Workday work history, the Answer Bank, the tracker and keyword match.
+PRO ($39 once): unlimited AI CV tailoring with PDF/Word export, cover letters and answer drafts. You get 5 free AI drafts to try it.
 
 Not affiliated with Workday, Greenhouse, Lever, iCIMS, Oracle, LinkedIn, Indeed or any employer.
