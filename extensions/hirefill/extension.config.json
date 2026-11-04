@@ -1,0 +1,28 @@
+{
+  "slug": "hirefill",
+  "productName": "HireFill",
+  "spec": "specs/11-hirefill.md",
+  "priceText": "$39 once (early-bird $29)",
+  "freeFills": 15,
+  "license": {
+    "provider": "creem",
+    "licenseServerUrl": "https://license.REPLACE-ME.com",
+    "productId": null,
+    "checkoutUrl": "https://www.creem.io/payment/prod_REPLACE-ME"
+  },
+  "storeExtensionId": "REPLACE-AFTER-FIRST-UPLOAD",
+  "entries": {
+    "content": "src/content/index.ts",
+    "app": "src/app/app.ts",
+    "background": "src/background.ts"
+  },
+  "esmEntries": [
+    "app"
+  ],
+  "copy": [
+    {
+      "from": "node_modules/pdfjs-dist/build/pdf.worker.min.mjs",
+      "to": "pdf.worker.mjs"
+    }
+  ]
+}

@@ -26,7 +26,8 @@
       "B": 2,
       "R": 2,
       "S": 5
-    }
+    },
+    "notes": "Built Nov 2026. Workday adapter modelled, needs live accuracy testing."
   },
   {
     "slug": "visaflag",

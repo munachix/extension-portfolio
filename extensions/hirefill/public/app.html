@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HireFill</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    body { padding: 0; }
+    main { max-width: 760px; margin: 0 auto; padding: 14px 14px 64px; }
+    header { display: flex; align-items: center; gap: 8px; }
+    header img { width: 28px; height: 28px; }
+    #tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+    #tabs button { padding: 5px 10px; font-size: 13px; }
+    .sticky { position: sticky; bottom: 0; background: var(--x-bg); padding: 10px 0; display: flex; gap: 10px; align-items: center; }
+    .tbl { width: 100%; border-collapse: collapse; font-size: 13px; } .tbl th, .tbl td { text-align: left; padding: 6px 4px; border-bottom: 1px solid var(--x-border); vertical-align: top; }
+    .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } @media (max-width: 520px) { .cmp { grid-template-columns: 1fr; } }
+    pre { white-space: pre-wrap; font: inherit; font-size: 13px; margin: 4px 0; }
+    .warn { background: var(--x-yellow-bg); color: var(--x-yellow); }
+    textarea { min-height: 110px; }
+  </style>
+</head>
+<body>
+<main>
+  <header><img src="icons/48.png" alt=""><h1>HireFill</h1></header>
+  <nav id="tabs" aria-label="Sections"></nav>
+  <div id="app"></div>
+  <p class="x-muted">Everything stays in this browser. HireFill fills forms and never clicks Submit: you always submit yourself.</p>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

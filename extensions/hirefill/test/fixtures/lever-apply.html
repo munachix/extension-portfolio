@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Example - Data Engineer</title></head>
+<body>
+<!-- Structure copied from jobs.lever.co/<company>/<id>/apply (Nov 2026). Text is synthetic. -->
+<div class="posting-headline"><h2>Data Engineer</h2></div>
+<form class="application-form" onsubmit="event.preventDefault(); window.__submits=(window.__submits||0)+1;">
+  <ul>
+    <li class="application-question resume"><div class="application-label">Resume/CV ✱</div><input type="file" name="resume" id="resume-upload-input" class="input-resume" style="opacity:0;position:absolute"></li>
+    <li class="application-question"><div class="application-label">Full name✱</div><input type="text" name="name" data-qa="name-input" required></li>
+    <li class="application-question"><div class="application-label">Email✱</div><input type="email" name="email" data-qa="email-input" required></li>
+    <li class="application-question"><div class="application-label">Phone ✱</div><input type="text" name="phone" data-qa="phone-input"></li>
+    <li class="application-question"><div class="application-label">Current company ✱</div><input type="text" name="org" data-qa="org-input"></li>
+    <li class="application-question"><div class="application-label">LinkedIn URL</div><input type="text" name="urls[LinkedIn]"></li>
+    <li class="application-question"><div class="application-label">GitHub URL</div><input type="text" name="urls[GitHub]"></li>
+    <li class="application-question custom-question"><div class="application-label"><div class="text">Are you legally authorized to work in the United States?✱</div></div>
+      <ul><li><label><input type="radio" name="cards[abc][field0]" value="Yes"><span>Yes</span></label></li><li><label><input type="radio" name="cards[abc][field0]" value="No"><span>No</span></label></li></ul></li>
+    <li class="application-question custom-question"><div class="application-label"><div class="text">Will you require visa sponsorship?✱</div></div>
+      <ul><li><label><input type="radio" name="cards[def][field0]" value="Yes"><span>Yes</span></label></li><li><label><input type="radio" name="cards[def][field0]" value="No"><span>No</span></label></li></ul></li>
+    <li class="application-question"><div class="application-label">Gender</div>
+      <ul><li><label><input type="radio" name="surveysResponses[s1][responses][field0]" value="Woman">Woman</label></li><li><label><input type="radio" name="surveysResponses[s1][responses][field0]" value="Man">Man</label></li><li><label><input type="radio" name="surveysResponses[s1][responses][field0]" value="Prefer not to disclose">Prefer not to disclose</label></li></ul></li>
+  </ul>
+  <button type="submit" data-qa="btn-submit">Submit application</button>
+</form>
+</body></html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Apply | Example Careers | Workday</title>
+<style>[role=listbox]{border:1px solid #ccc;background:#fff}[role=option]{padding:3px}</style></head>
+<body>
+<!-- Modelled on Workday's application flow (data-automation-id attributes as used by Workday in 2025–26). Not captured from a live page: Workday applications need an account. -->
+<div id="page"></div>
+<div data-automation-id="pageFooter"><button data-automation-id="bottom-navigation-next-button" id="next">Save and Continue</button></div>
+<script>
+window.__submits = 0;
+function listbox(id, label, options) {
+  return `<div data-automation-id="formField-${id}"><label>${label}</label><button type="button" aria-haspopup="listbox" data-automation-id="${id}" data-options="${options.join('|')}">Select One</button></div>`;
+}
+function workBlock(n) {
+  return `<div data-automation-id="workExperience-${n}"><h4>Work Experience ${n}</h4>
+    <div data-automation-id="formField-jobTitle"><label for="wt${n}">Job Title*</label><input id="wt${n}" data-automation-id="jobTitle"></div>
+    <div data-automation-id="formField-company"><label for="wc${n}">Company*</label><input id="wc${n}" data-automation-id="company"></div>
+    <div data-automation-id="formField-currentlyWorkHere"><label><input type="checkbox" data-automation-id="currentlyWorkHere"> I currently work here</label></div>
+    <div data-automation-id="formField-startDate"><label>From*</label><input data-automation-id="dateSectionMonth-input" placeholder="MM"><input data-automation-id="dateSectionYear-input" placeholder="YYYY"></div>
+    <div data-automation-id="formField-endDate"><label>To</label><input data-automation-id="dateSectionMonth-input" placeholder="MM"><input data-automation-id="dateSectionYear-input" placeholder="YYYY"></div>
+    <div data-automation-id="formField-description"><label for="wd${n}">Role Description</label><textarea id="wd${n}" data-automation-id="description"></textarea></div></div>`;
+}
+const pages = [
+  () => `<h2>My Information</h2>
+    ${listbox('countryDropdown', 'Country*', ['Canada', 'United States of America', 'United Kingdom'])}
+    <div data-automation-id="formField-legalNameSection_firstName"><label for="fn">First Name*</label><input id="fn" data-automation-id="legalNameSection_firstName"></div>
+    <div data-automation-id="formField-legalNameSection_lastName"><label for="ln">Last Name*</label><input id="ln" data-automation-id="legalNameSection_lastName"></div>
+    <div data-automation-id="formField-addressSection_city"><label for="ci">City</label><input id="ci" data-automation-id="addressSection_city"></div>
+    <div data-automation-id="formField-email"><label for="em">Email Address*</label><input id="em" data-automation-id="email"></div>
+    ${listbox('phone-device-type', 'Phone Device Type*', ['Landline', 'Mobile'])}
+    <div data-automation-id="formField-phone-number"><label for="ph">Phone Number*</label><input id="ph" data-automation-id="phone-number"></div>`,
+  () => `<h2>My Experience</h2>
+    <div data-automation-id="workExperienceSection"><h3>Work Experience</h3><div class="blocks"></div><button type="button" data-automation-id="Add" id="addWork">Add</button></div>
+    <div data-automation-id="formField-file-upload"><label>Resume/CV</label><input type="file" data-automation-id="file-upload-input-ref" style="opacity:0;position:absolute"></div>
+    <div data-automation-id="formField-linkedinQuestion"><label for="li">LinkedIn</label><input id="li" data-automation-id="linkedinQuestion"></div>`,
+  () => `<h2>Application Questions</h2>
+    ${listbox('q1', 'Are you legally authorized to work in the country in which this job is located?', ['Yes', 'No'])}
+    ${listbox('q2', 'Will you now or in the future require sponsorship?', ['Yes', 'No'])}`,
+];
+let i = 0;
+function render() {
+  document.getElementById('page').innerHTML = pages[i]();
+  history.pushState({}, '', location.pathname.replace(/\/step\d+$/, '') + '/step' + i);
+  document.querySelectorAll('[aria-haspopup=listbox]').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('[role=listbox]').forEach((l) => l.remove());
+    const lb = document.createElement('ul'); lb.setAttribute('role', 'listbox');
+    for (const o of b.dataset.options.split('|')) { const li = document.createElement('li'); li.setAttribute('role', 'option'); li.setAttribute('data-automation-id', 'promptOption'); li.textContent = o; li.addEventListener('click', () => { b.textContent = o; lb.remove(); }); lb.append(li); }
+    b.after(lb);
+  }));
+  const add = document.getElementById('addWork');
+  if (add) { let n = 0; add.addEventListener('click', () => { n++; add.previousElementSibling.insertAdjacentHTML('beforeend', workBlock(n)); add.textContent = 'Add Another'; }); }
+}
+document.getElementById('next').addEventListener('click', () => { if (i < pages.length - 1) { i++; render(); } else { window.__submits++; } });
+render();
+</script>
+</body></html>

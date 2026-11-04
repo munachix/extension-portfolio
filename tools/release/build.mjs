@@ -43,6 +43,7 @@ export async function buildExtension(slug, { prod = false, watch = false } = {})
   await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
 
+  const esm = new Set(config.esmEntries ?? []);
   for (const [name, entry] of Object.entries(config.entries)) {
     await viteBuild({
       configFile: false,
@@ -56,8 +57,9 @@ export async function buildExtension(slug, { prod = false, watch = false } = {})
         minify: prod,
         sourcemap: prod ? false : 'inline',
         target: 'chrome120',
-        lib: { entry: path.join(dir, entry), formats: ['iife'], name: `x_${name}`, fileName: () => `${name}.js` },
-        rollupOptions: { output: { extend: true } },
+        // Content scripts must be classic scripts (IIFE); extension pages may opt into ES modules.
+        lib: { entry: path.join(dir, entry), formats: [esm.has(name) ? 'es' : 'iife'], name: `x_${name}`, fileName: () => `${name}.js` },
+        rollupOptions: { output: esm.has(name) ? { inlineDynamicImports: true } : { extend: true } },
         watch: watch ? {} : null,
       },
     });
@@ -65,6 +67,7 @@ export async function buildExtension(slug, { prod = false, watch = false } = {})
 
   await cp(path.join(dir, 'public'), outDir, { recursive: true, filter: keep });
   await cp(path.join(ROOT, 'packages/ui/src/tokens.css'), path.join(outDir, 'tokens.css'));
+  for (const c of config.copy ?? []) await cp(path.join(dir, c.from), path.join(outDir, c.to));
 
   const { licenseHost } = await loadTsModule(path.join(ROOT, 'packages/core/src/license.ts'), outDir);
   const mod = await loadTsModule(path.join(dir, 'src/manifest.ts'), outDir);

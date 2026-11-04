@@ -1,0 +1,35 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Job Application for Backend Engineer at Example</title>
+<style>.select__menu{border:1px solid #ccc}.select__option{padding:4px}</style></head>
+<body>
+<!-- Structure copied from job-boards.greenhouse.io application form (Nov 2026): plain inputs + react-select comboboxes. Text is synthetic. -->
+<div class="job__title"><h1>Backend Engineer</h1><div class="job__location">Remote (US)</div></div>
+<form id="application-form" class="application--form" onsubmit="event.preventDefault(); window.__submits=(window.__submits||0)+1;">
+  <div class="field"><label for="first_name">First Name<span>*</span></label><input id="first_name" type="text" class="input input__single-line" required></div>
+  <div class="field"><label for="last_name">Last Name<span>*</span></label><input id="last_name" type="text" class="input input__single-line" required></div>
+  <div class="field"><label for="email">Email<span>*</span></label><input id="email" type="text" class="input input__single-line" required></div>
+  <div class="field"><label for="phone">Phone</label><input id="phone" type="tel" class="input input__single-line iti__tel-input"></div>
+  <div class="field"><label for="resume">Resume/CV</label><button type="button" class="btn">Attach</button><input id="resume" type="file" class="visually-hidden" style="position:absolute;width:1px;height:1px;opacity:0"></div>
+  <div class="field"><label for="question_1">LinkedIn Profile</label><input id="question_1" type="text" class="input input__single-line"></div>
+  <div class="select" data-options="Yes|No"><div class="select__container"><label id="question_2-label" for="question_2" class="label select__label">Will you now or in the future require sponsorship for a visa to remain in your current location?<span aria-hidden="true">*</span></label>
+    <div class="select-shell"><div class="select__control"><div class="select__value-container"><div class="select__placeholder">Select...</div><div class="select__input-container"><input class="select__input" id="question_2" role="combobox" aria-autocomplete="list" aria-expanded="false" type="text" value=""></div></div></div></div></div></div>
+  <div class="select" data-options="Yes|No"><div class="select__container"><label for="question_3" class="label select__label">Are you legally authorized to work in the United States?</label>
+    <div class="select-shell"><div class="select__control"><div class="select__value-container"><div class="select__placeholder">Select...</div><div class="select__input-container"><input class="select__input" id="question_3" role="combobox" aria-autocomplete="list" aria-expanded="false" type="text" value=""></div></div></div></div></div></div>
+  <div class="field"><label for="question_4">Why do you want to work at Example?</label><textarea id="question_4"></textarea></div>
+  <div class="select" data-options="Male|Female|Decline To Self Identify"><div class="select__container"><label for="gender" class="label select__label">Gender</label>
+    <div class="select-shell"><div class="select__control"><div class="select__value-container"><div class="select__placeholder">Select...</div><div class="select__input-container"><input class="select__input" id="gender" role="combobox" aria-autocomplete="list" type="text" value=""></div></div></div></div></div></div>
+  <div class="field"><input id="privacy" type="checkbox" required><label for="privacy">I agree to the privacy policy</label></div>
+  <button id="submit" class="btn btn--pill">Submit application</button>
+</form>
+<script>
+  // Minimal react-select stand-in: typing filters and opens a menu; clicking an option selects it.
+  document.querySelectorAll('.select').forEach((box) => {
+    const input = box.querySelector('input'); const opts = box.dataset.options.split('|');
+    const menu = document.createElement('div'); menu.className = 'select__menu'; menu.hidden = true; box.querySelector('.select-shell').append(menu);
+    const show = () => { const q = input.value.toLowerCase(); menu.replaceChildren(...opts.filter((o) => o.toLowerCase().includes(q) || !q).map((o, i) => { const d = document.createElement('div'); d.className = 'select__option'; d.setAttribute('role', 'option'); d.id = `react-select-${input.id}-option-${i}`; d.textContent = o;
+      d.addEventListener('click', () => { const ph = box.querySelector('.select__placeholder, .select__single-value'); ph.className = 'select__single-value'; ph.textContent = o; input.value = ''; menu.hidden = true; input.setAttribute('aria-expanded', 'false'); }); return d; })); menu.hidden = false; input.setAttribute('aria-expanded', 'true'); };
+    input.addEventListener('input', show);
+    input.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown') show(); });
+  });
+</script>
+</body></html>

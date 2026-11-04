@@ -1,0 +1,16 @@
+{
+  "name": "@ext/hirefill",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@ext/core": "workspace:*",
+    "@ext/ui": "workspace:*",
+    "@ext/job-sites": "workspace:*",
+    "pdfjs-dist": "4.10.38",
+    "mammoth": "1.9.0",
+    "pdf-lib": "1.17.1",
+    "docx": "9.5.1"
+  },
+  "devDependencies": { "@ext/testing": "workspace:*" }
+}
