@@ -9,7 +9,7 @@ packages/job-sites  page readers for 17 job sites (LinkedIn, Indeed, SEEK, StepS
 packages/testing    Playwright helpers: load an unpacked extension, serve local fixtures, block real network
 extensions/<slug>   one folder per extension
 tools/release       build, test, assets, release (zip + store listing)
-tools/scorecard     success tracking (Step 2, not built yet)
+tools/scorecard     weekly success tracking: which extensions hit $72/mo (see its README)
 sites/landing       landing pages + privacy policies
 specs/              the product specs
 ```

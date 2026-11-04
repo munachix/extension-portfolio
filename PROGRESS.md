@@ -17,11 +17,13 @@ _Last updated: 5 November 2026_
   - Store kit: `dist/workfromwhere-0.1.0.zip`, `store/listing.md`, `store/permissions.md`, icon, promo tile, 5 screenshots.
   - Landing page + privacy policy in `sites/landing/workfromwhere/`.
 
+- **Step 2: Scorecard** (`tools/scorecard`): weekly numbers in `data/metrics.csv`, keep/fix/kill rules from the spec with thresholds in `rules.json`, health flags, revenue-per-hour and winner rules, terminal table + offline `dashboard.html` (light/dark, trend charts with hover, table view). Commands: `add`, `launch`, `rewrote`, `import-revenue` (Lemon Squeezy/Polar), `import-cws`, `--sample`. 32 tests. See `tools/scorecard/README.md`.
+
 ## Next
 1. **You:** load `extensions/workfromwhere/dist` in Chrome and run the manual checks in `extensions/workfromwhere/README.md` (LinkedIn logged in, Indeed, StepStone).
 2. **You:** Lemon Squeezy product with license keys → paste checkout URL + product id into `extension.config.json`. Support email. Publish `sites/landing`.
-3. **Me (Step 2):** the scorecard tool (`tools/scorecard`): metrics CSV, rules engine, dashboard.
-4. **Me:** HireFill Phase 1, reusing `packages/job-sites`.
+3. **Me:** VisaFlag (reuses `packages/job-sites`), then HireFill Phase 1.
+4. **You, from launch day:** `pnpm scorecard launch workfromwhere`, then the 10-minute Monday routine in `tools/scorecard/README.md`.
 
 ## Blockers / decisions for you
 - **LinkedIn and StepStone selectors are unverified on live pages** (LinkedIn needs a login; StepStone blocks automated browsers). The generic fallback covers them, but please test by hand.

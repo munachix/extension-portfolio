@@ -1,0 +1,7 @@
+[
+  { "slug": "workfromwhere", "name": "WorkFromWhere", "launchDate": "2026-05-01", "listingRewrites": 1 },
+  { "slug": "hirefill", "name": "HireFill", "launchDate": "2026-07-01", "listingRewrites": 0 },
+  { "slug": "visaflag", "name": "VisaFlag", "launchDate": "2026-07-20", "listingRewrites": 2 },
+  { "slug": "borderbatch", "name": "BorderBatch", "launchDate": "2026-09-20", "listingRewrites": 0 },
+  { "slug": "goldenmap", "name": "GoldenMap", "launchDate": "2026-10-20", "listingRewrites": 0 }
+]

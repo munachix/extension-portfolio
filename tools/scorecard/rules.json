@@ -1,0 +1,12 @@
+{
+  "_doc": "Thresholds from specs/12-SCORECARD.md. Tune freely; the engine reads everything from here.",
+  "target": 72,
+  "half": 36,
+  "winner": 300,
+  "selfTraffic": { "green": 500, "yellow": 150, "byWeek": 8 },
+  "day30": { "installs": 100, "sales": 1 },
+  "day90": { "revenue": 36, "weeklyUsers": 500, "minImpressions": 150, "rewritesBeforeFreeze": 2 },
+  "day180": { "winner": 72, "stop": 36 },
+  "revenuePerHour": { "maxHoursPerMonth": 4, "revenueBelow": 72, "fromDay": 90 },
+  "health": { "uninstallPct": 40, "minRating": 4.0, "minRatingCount": 1, "impressionDropPct": 50 }
+}

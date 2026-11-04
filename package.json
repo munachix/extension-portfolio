@@ -9,7 +9,7 @@
     "release": "node tools/release/release.mjs",
     "assets": "node tools/release/assets.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "scorecard": "node -e \"console.log('Scorecard comes in Step 2 (tools/scorecard).')\""
+    "scorecard": "node tools/scorecard/cli.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",
