@@ -1,0 +1,14 @@
+{
+  "name": "@ext/flipcomps",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@ext/core": "workspace:*",
+    "@ext/ui": "workspace:*",
+    "@ext/job-sites": "workspace:*"
+  },
+  "devDependencies": {
+    "@ext/testing": "workspace:*"
+  }
+}

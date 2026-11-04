@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>FlipComps</title><link rel="stylesheet" href="tokens.css">
+<style>body{width:340px;padding:14px}header{display:flex;align-items:center;gap:8px}header img{width:26px;height:26px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}td{padding:3px 2px;border-bottom:1px solid var(--x-border)}td:not(:first-child){text-align:right}
+input[type=number]{width:100%;padding:6px 8px;font:inherit;border:1px solid var(--x-border);border-radius:8px;background:var(--x-bg);color:inherit}</style></head>
+<body>
+<header><img src="icons/48.png" alt=""><h1>FlipComps</h1></header>
+<p class="x-muted">Open any eBay, Poshmark, Mercari, Depop or Etsy listing to see sold prices and your profit there.</p>
+<section class="x-card"><h2>Quick profit check</h2>
+  <div class="g3"><div><label for="price">Price</label><input type="number" id="price" step="0.01"></div><div><label for="cost">Your cost</label><input type="number" id="cost" step="0.01"></div><div><label for="ship">Shipping</label><input type="number" id="ship" step="0.01"></div></div>
+  <label for="cat">eBay category</label><select id="cat"></select>
+  <label class="x-check"><input type="checkbox" id="boost"> Depop boosted listing</label>
+  <table><tbody id="out"></tbody></table>
+  <p class="x-muted" id="asof"></p>
+</section>
+<section class="x-card pro-only"><h2>Pro</h2>
+  <label for="target">Target profit per item ($)</label><input type="number" id="target" step="1">
+  <label for="feePct">Fee % overrides (platform=percent)</label><textarea id="feePct"></textarea>
+  <div class="x-row"><button type="button" id="saveFees">Save fees</button><button type="button" id="resetFees">Reset to defaults</button></div><div class="x-msg ok" id="feeMsg"></div>
+  <p class="x-muted" id="inv"></p><button type="button" id="csv" hidden>Export inventory CSV</button>
+</section>
+<section id="pro"></section>
+<p class="x-muted">Read-only: FlipComps never lists, shares or messages for you. Not affiliated with eBay, Poshmark, Mercari, Depop or Etsy.</p>
+<script src="popup.js"></script>
+</body></html>

@@ -1,0 +1,12 @@
+{
+  "_doc": "US seller fees, checked Nov 2026 against platform help pages and current fee guides. Users can override these in the popup (Pro). Update when a platform changes its fees.",
+  "asOf": "2026-11",
+  "platforms": {
+    "ebay": { "name": "eBay", "pct": 0.136, "pctAbove": 0.0235, "tierLimit": 7500, "perOrderLow": 0.30, "perOrderHigh": 0.40, "perOrderThreshold": 10, "feeOnShipping": true,
+      "categories": { "most": { "label": "Most categories", "pct": 0.136 }, "cards": { "label": "Trading cards", "pct": 0.1325 }, "sneakers": { "label": "Sneakers $150+", "pct": 0.08, "noPerOrder": true }, "handbags": { "label": "Handbags (up to $2,000)", "pct": 0.15 } } },
+    "poshmark": { "name": "Poshmark", "flatUnder": 15, "flat": 2.95, "pct": 0.20, "feeOnShipping": false, "buyerPaysShipping": true },
+    "mercari": { "name": "Mercari", "pct": 0.10, "feeOnShipping": true },
+    "depop": { "name": "Depop", "pct": 0, "processingPct": 0.033, "processingFixed": 0.45, "boostPct": 0.08, "feeOnShipping": true },
+    "etsy": { "name": "Etsy", "pct": 0.065, "processingPct": 0.03, "processingFixed": 0.25, "listing": 0.20, "feeOnShipping": true }
+  }
+}
