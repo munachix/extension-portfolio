@@ -1,0 +1,41 @@
+# Refreshes VisaFlag's sponsor data every Monday and publishes it to GitHub Pages.
+# Setup: repo Settings → Pages → Source: "GitHub Actions". Then set
+# extensions/visaflag/extension.config.json → dataBaseUrl to https://<user>.github.io/<repo>/visaflag
+name: VisaFlag data
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: visaflag-data
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment:
+      name: github-pages
+    env:
+      PREVIOUS_BASE_URL: ${{ vars.VISAFLAG_DATA_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Download and normalise the official datasets
+        run: node --max-old-space-size=6144 extensions/visaflag/pipeline/build.mjs --out site/visaflag
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - uses: actions/deploy-pages@v4
+      - name: Fail loudly if any dataset could not be refreshed
+        run: |
+          node -e "const r=require('./site/visaflag/report.json'); if(!r.ok){console.error(JSON.stringify(r.failures,null,2)); process.exit(1)}"

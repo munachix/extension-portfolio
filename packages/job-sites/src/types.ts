@@ -8,6 +8,8 @@ export interface JobPage {
   structuredLocations: string[];
   titleText: string;
   companyText: string;
+  /** The element showing the company name (VisaFlag puts its badge right after it). */
+  companyEl: Element | null;
   /** Where to insert our badge (before this element). */
   anchorEl: Element | null;
   url: string;
@@ -18,6 +20,9 @@ export interface ListItem {
   el: Element;
   /** Location text visible on the card. */
   locationText: string;
+  /** Company name visible on the card ('' if none). */
+  companyText: string;
+  companyEl: Element | null;
   /** Stable id for de-duping (job id or URL). */
   key: string;
 }

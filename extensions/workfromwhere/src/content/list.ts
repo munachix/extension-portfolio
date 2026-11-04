@@ -11,6 +11,7 @@ const COLORS = { green: ['#e7f6ee', '#12804a', '✓ Open'], red: ['#fdecec', '#c
 export function applyListBadges(items: ListItem[], s: Settings): void {
   if (!s.country) return;
   for (const it of items) {
+    if (!it.locationText) continue;
     const v = detectCard(it.locationText, { country: s.country, timeZone: s.timeZone });
     if (v.status === 'unset') continue;
     const sig = `${it.key}|${v.status}|${s.hideRed}`;

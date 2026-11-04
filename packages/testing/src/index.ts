@@ -37,12 +37,21 @@ export async function launchExtension(distDir: string): Promise<ExtensionHarness
   return { context, extensionId, worker, blocked };
 }
 
+/** origin + path, normalised the way the browser reports it (lower-case host). */
+const norm = (url: string) => { const u = new URL(url); return `${u.origin}${u.pathname}`; };
+
 /** Serve `file` whenever the browser requests `url` (exact, query ignored). */
 export async function serveFixture(h: ExtensionHarness, url: string, file: string): Promise<void> {
   const body = await readFile(file, 'utf8');
-  const target = url.split(/[?#]/)[0];
+  const target = norm(url);
   await h.context.route((u) => `${u.origin}${u.pathname}` === target, (route) =>
     route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body }));
+}
+
+/** Serve any body (e.g. gzipped data) at an exact URL. */
+export async function serveBody(h: ExtensionHarness, url: string, body: string | Buffer, contentType = 'application/octet-stream'): Promise<void> {
+  const target = norm(url);
+  await h.context.route((u) => `${u.origin}${u.pathname}` === target, (route) => route.fulfill({ status: 200, contentType, body }));
 }
 
 export async function setStorage(h: ExtensionHarness, items: Record<string, unknown>): Promise<void> {

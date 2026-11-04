@@ -1,0 +1,5 @@
+{
+  "_doc": "Fallback when the DOL listing page can't be read. Update when DOL posts a new quarter (Feb, May, Aug, Nov); the pipeline also checks for the next quarter automatically.",
+  "current": { "fy": 2026, "q": 3, "url": "https://www.dol.gov/media/LCA_Disclosure_Data_FY2026_Q3.xlsx" },
+  "previous": { "fy": 2025, "q": 4, "url": "https://www.dol.gov/sites/dolgov/files/ETA/oflc/pdfs/LCA_Disclosure_Data_FY2025_Q4.xlsx" }
+}

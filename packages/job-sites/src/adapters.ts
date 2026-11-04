@@ -26,7 +26,7 @@ interface Spec {
   description: string[];
   /** Badge goes before this; defaults to the description element. */
   anchor?: string[];
-  list?: { item: string[]; location: string[]; key: (el: Element) => string };
+  list?: { item: string[]; location: string[]; company?: string[]; key: (el: Element) => string };
   /** Escape hatch for sites that need code, not just selectors. */
   pickDescription?: (doc: Document) => Element | null;
 }
@@ -43,12 +43,14 @@ function make(spec: Spec): SiteAdapter {
       const structuredLocations = structuredApplicantLocations(doc);
       if (!descriptionEl && structuredLocations.length === 0) return null;
       const locationText = spec.locationAll ? textsOf(doc, spec.location).join(' · ') : textOf(doc, spec.location);
+      const companyEl = first(doc, spec.company);
       return {
         descriptionEl,
         locationText,
         structuredLocations,
         titleText: textOf(doc, spec.title) || clean(doc.title),
-        companyText: textOf(doc, spec.company),
+        companyText: clean(companyEl?.textContent),
+        companyEl,
         anchorEl: (spec.anchor && first(doc, spec.anchor)) || descriptionEl,
         url: doc.location?.href ?? '',
       };
@@ -63,7 +65,9 @@ function make(spec: Spec): SiteAdapter {
             if (!els.length) continue;
             els.forEach((el) => {
               const locationText = textsOf(el, spec.list!.location).join(' · ');
-              if (locationText) items.push({ el, locationText, key: spec.list!.key(el) });
+              const companyEl = spec.list!.company ? first(el, spec.list!.company) : null;
+              const companyText = clean(companyEl?.textContent);
+              if (locationText || companyText) items.push({ el, locationText, companyText, companyEl, key: spec.list!.key(el) });
             });
             break;
           }
@@ -90,6 +94,7 @@ export const linkedin = make({
   list: {
     item: ['li[data-occludable-job-id]', '.job-card-container', '.job-search-card'],
     location: ['.job-card-container__metadata-wrapper li', '.job-card-container__metadata-item', '.artdeco-entity-lockup__caption li', '.job-search-card__location'],
+    company: ['.artdeco-entity-lockup__subtitle', '.job-card-container__primary-description', '.base-search-card__subtitle'],
     key: (el) => attr('data-occludable-job-id')(el) || attr('data-job-id')(el) || href(el),
   },
 });
@@ -105,6 +110,7 @@ export const indeed = make({
   list: {
     item: ['.job_seen_beacon', '[data-testid="slider_item"]'],
     location: ['[data-testid="text-location"]', '.companyLocation'],
+    company: ['[data-testid="company-name"]', '.companyName'],
     key: (el) => attr('data-jk')(el) || href(el),
   },
 });
@@ -120,6 +126,7 @@ export const seek = make({
   list: {
     item: ['article[data-job-id]'],
     location: ['[data-automation="jobLocation"]'],
+    company: ['[data-automation="jobCompany"]'],
     key: attr('data-job-id'),
   },
 });
@@ -136,7 +143,24 @@ export const stepstone = make({
   list: {
     item: ['article[data-at="job-item"]'],
     location: ['[data-at="job-item-location"]'],
+    company: ['[data-at="job-item-company-name"]'],
     key: (el) => el.id || href(el),
+  },
+});
+
+export const glassdoor = make({
+  id: 'glassdoor', label: 'Glassdoor',
+  matches: ['https://www.glassdoor.com/*', 'https://www.glassdoor.co.uk/*', 'https://www.glassdoor.ca/*', 'https://www.glassdoor.com.au/*', 'https://www.glassdoor.de/*', 'https://www.glassdoor.nl/*', 'https://www.glassdoor.co.in/*'],
+  host: /(^|\.)glassdoor\.(com|co\.uk|ca|com\.au|de|nl|co\.in)$/,
+  title: ['[data-test="job-title"]', 'h1[id^="jd-job-title"]', 'h1'],
+  company: ['[data-test="employer-name"]', '[class*="EmployerProfile_employerName"]', '[class*="employerName"]'],
+  location: ['[data-test="location"]', '[class*="JobDetails_location"]'],
+  description: ['[class*="JobDetails_jobDescription"]', '#JobDescriptionContainer', '[class*="jobDescriptionContent"]'],
+  list: {
+    item: ['li[data-test="jobListing"]', 'li[class*="JobsList_jobListItem"]'],
+    location: ['[data-test="emp-location"]', '[class*="JobCard_location"]'],
+    company: ['[class*="EmployerProfile_compactEmployerName"]', '[data-test="employer-short-name"]'],
+    key: (el) => el.getAttribute('data-jobid') ?? el.getAttribute('data-id') ?? href(el),
   },
 });
 
@@ -150,6 +174,7 @@ export const reed = make({
   list: {
     item: ['article[data-qa="job-card"]', 'article.job-result-card'],
     location: ['[data-qa="job-card-location"]', '.job-metadata__item--location'],
+    company: ['[data-qa="job-card-company"]', '[data-qa="job-posted-by"] a', '.gtmJobListingPostedBy'],
     key: (el) => el.getAttribute('data-id') ?? el.id ?? href(el),
   },
 });
@@ -165,6 +190,7 @@ export const weworkremotely = make({
   list: {
     item: ['li.new-listing-container'],
     location: ['.new-listing__categories__category'],
+    company: ['.new-listing__company-name'],
     key: href,
   },
 });
@@ -179,6 +205,7 @@ export const remoteok = make({
   list: {
     item: ['tr.job'],
     location: ['.location'],
+    company: ['h3'],
     key: attr('data-id'),
   },
 });
@@ -256,7 +283,7 @@ export const generic: SiteAdapter = make({
 });
 
 export const ADAPTERS: SiteAdapter[] = [
-  linkedin, indeed, seek, stepstone, reed, weworkremotely, remoteok, greenhouse, lever,
+  linkedin, indeed, glassdoor, seek, stepstone, reed, weworkremotely, remoteok, greenhouse, lever,
   wellfound, ashby, workable, smartrecruiters, personio, recruitee, join, xing,
 ];
 

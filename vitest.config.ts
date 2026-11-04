@@ -7,7 +7,7 @@ export default defineConfig({
   define: { __DEV__: 'true' },
   resolve: { alias },
   test: {
-    include: ['packages/*/test/**/*.test.ts', 'extensions/*/test/**/*.test.ts', 'tools/*/test/**/*.test.{ts,mjs}'],
+    include: ['packages/*/test/**/*.test.ts', 'extensions/*/test/**/*.test.ts', 'tools/*/test/**/*.test.{ts,mjs}', 'extensions/*/pipeline/test/**/*.test.mjs'],
     exclude: ['**/node_modules/**', '**/._*'],
     environment: 'node',
   },
