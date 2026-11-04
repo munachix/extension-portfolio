@@ -1,0 +1,39 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Senior Engineer | Acme | LinkedIn</title></head>
+<body>
+<!-- Structure copied from LinkedIn's logged-in two-pane job view (class names as of 2026). Text is synthetic. -->
+<div class="scaffold-layout__list">
+  <ul>
+    <li data-occludable-job-id="101"><div class="job-card-container"><a href="/jobs/view/101">Senior Engineer</a>
+      <ul class="job-card-container__metadata-wrapper"><li>United States (Remote)</li></ul></div></li>
+    <li data-occludable-job-id="102"><div class="job-card-container"><a href="/jobs/view/102">Backend Developer</a>
+      <ul class="job-card-container__metadata-wrapper"><li>EMEA (Remote)</li></ul></div></li>
+    <li data-occludable-job-id="103"><div class="job-card-container"><a href="/jobs/view/103">Data Analyst</a>
+      <ul class="job-card-container__metadata-wrapper"><li>Germany (Remote)</li></ul></div></li>
+  </ul>
+</div>
+<div class="jobs-search__job-details--container">
+  <div class="job-details-jobs-unified-top-card__container--two-pane">
+    <h1 class="job-details-jobs-unified-top-card__job-title">Senior Engineer</h1>
+    <div class="job-details-jobs-unified-top-card__company-name"><a href="#">Acme</a></div>
+    <div class="job-details-jobs-unified-top-card__primary-description-container"><span class="tvm__text">United States</span> · <span class="tvm__text">2 days ago</span></div>
+  </div>
+  <div class="jobs-description__content jobs-description-content">
+    <div class="jobs-box__html-content" id="job-details">
+      <h2>About the job</h2>
+      <p>Acme builds developer tools used by thousands of teams.</p>
+      <p><strong>Requirements</strong></p>
+      <ul><li>5+ years of TypeScript</li><li>This role is open to US residents only.</li></ul>
+      <p>We offer great benefits.</p>
+    </div>
+  </div>
+</div>
+<script>
+  // Simulates LinkedIn's in-page navigation: content swaps, URL changes, no reload.
+  window.goToJob = (id, html, location) => {
+    history.pushState({}, '', '/jobs/view/' + id + '/');
+    document.querySelector('#job-details').innerHTML = html;
+    document.querySelector('.tvm__text').textContent = location;
+  };
+</script>
+</body></html>

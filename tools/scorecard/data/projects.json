@@ -1,0 +1,7 @@
+[
+  { "slug": "workfromwhere", "name": "WorkFromWhere", "launchDate": null, "priceModel": "$4.99/mo or $29 lifetime", "scores": { "D": 3, "C": 5, "W": 2, "B": 5, "R": 3, "S": 4 }, "notes": "Revised Nov 2026: a 10k-user Brazil-focused competitor exists (International Jobs by Leapfrog), so C is closer to 4." },
+  { "slug": "hirefill", "name": "HireFill", "launchDate": null, "priceModel": "$39 one-time", "scores": { "D": 5, "C": 3, "W": 4, "B": 2, "R": 2, "S": 5 } },
+  { "slug": "visaflag", "name": "VisaFlag", "launchDate": null, "priceModel": "$5.99/mo or $39 lifetime", "scores": { "D": 4, "C": 3, "W": 3, "B": 4, "R": 4, "S": 4 } },
+  { "slug": "borderbatch", "name": "BorderBatch", "launchDate": null, "priceModel": "$12 lifetime", "scores": { "D": 3, "C": 4, "W": 2, "B": 5, "R": 5, "S": 3 } },
+  { "slug": "goldenmap", "name": "GoldenMap", "launchDate": null, "priceModel": "$12 lifetime", "scores": { "D": 2, "C": 5, "W": 2, "B": 5, "R": 5, "S": 3 } }
+]

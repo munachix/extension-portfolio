@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>WorkFromWhere</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    body { width: 340px; padding: 14px; }
+    header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    header img { width: 24px; height: 24px; }
+    #status { min-height: 22px; }
+    #rate { background: var(--x-green-bg); }
+  </style>
+</head>
+<body>
+  <header><img src="icons/48.png" alt=""><h1>WorkFromWhere</h1></header>
+  <section class="x-card" id="status" aria-live="polite">Checking this page…</section>
+  <section id="profile"></section>
+  <section id="rate" class="x-card" hidden>
+    <strong>Is WorkFromWhere saving you time?</strong>
+    <p class="x-muted">A quick rating helps other job seekers find it.</p>
+    <div class="x-row"><a class="x-btn primary" target="_blank" rel="noopener">Rate it</a><button type="button">No thanks</button></div>
+  </section>
+  <section id="saved"></section>
+  <section id="pro"></section>
+  <p class="x-muted"><a href="#" id="options">All settings</a> · Your data never leaves your computer.</p>
+  <script src="popup.js"></script>
+</body>
+</html>

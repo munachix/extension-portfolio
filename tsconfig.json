@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["chrome", "node"],
+    "strict": true,
+    "noUncheckedIndexedAccess": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ext/core": ["packages/core/src/index.ts"],
+      "@ext/ui": ["packages/ui/src/index.ts"],
+      "@ext/job-sites": ["packages/job-sites/src/index.ts"],
+      "@ext/testing": ["packages/testing/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src", "packages/*/test", "extensions/*/src", "extensions/*/test", "src/globals.d.ts"]
+}

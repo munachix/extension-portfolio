@@ -1,0 +1,18 @@
+{
+  "slug": "workfromwhere",
+  "productName": "WorkFromWhere",
+  "spec": "specs/01-workfromwhere.md",
+  "priceText": "$4.99/mo or $29 lifetime",
+  "license": {
+    "provider": "lemonsqueezy",
+    "productId": null,
+    "checkoutUrl": "https://REPLACE-ME.lemonsqueezy.com/buy/REPLACE-ME"
+  },
+  "storeExtensionId": "REPLACE-AFTER-FIRST-UPLOAD",
+  "entries": {
+    "content": "src/content/index.ts",
+    "popup": "src/popup/popup.ts",
+    "options": "src/options/options.ts",
+    "background": "src/background.ts"
+  }
+}

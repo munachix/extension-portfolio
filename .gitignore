@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-prod/
+extensions/*/dist/
+extensions/*/dist-prod/
+test-results/
+playwright-report/
+.env
+.DS_Store
+._*

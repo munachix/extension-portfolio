@@ -1,0 +1,57 @@
+{
+  "_doc": "Phrase rules. All regexes are case-insensitive. before/after = how many characters around the phrase to look for a place name. strength 'weak' phrases are ignored in sentences that talk about the company itself (\"we're based in Berlin\"). Add new phrases here; the engine needs no code change.",
+  "restrict": [
+    { "id": "must_reside", "re": "\\bmust\\b[^.;!?]{0,40}?\\b(?:reside|live|be (?:located|based|living|residing|physically (?:located|present)|in|within|a (?:resident|citizen)))\\b", "before": 0, "after": 90, "strength": "strong" },
+    { "id": "required_to_be", "re": "\\b(?:need|needs|required|requires|require|have) to (?:be (?:located|based)|live|reside|be in)\\b", "before": 0, "after": 70, "strength": "strong" },
+    { "id": "only", "re": "\\bonly\\b", "before": 35, "after": 35, "strength": "strong" },
+    { "id": "residents", "re": "\\b(?:residents?|residency|citizens?|citizenship|nationals?|permanent residen(?:ts?|cy)|green card(?: holders?)?|PR holders?)\\b", "before": 40, "after": 40, "strength": "strong" },
+    { "id": "work_auth", "re": "\\b(?:authori[sz]ed|authori[sz]ation|eligible|eligibility|legally (?:able|allowed|permitted|entitled)|entitled|permitted) to (?:work|live and work|be employed)\\b|\\bwork(?:ing)? (?:authori[sz]ation|permits?|visas?|eligibility|rights?)\\b|\\bfull (?:working|work) rights\\b|\\bright to (?:work|live and work)\\b", "before": 30, "after": 60, "strength": "strong" },
+    { "id": "open_to", "re": "\\b(?:open|available|limited|restricted|exclusive) (?:only )?to\\b", "before": 0, "after": 70, "strength": "strong" },
+    { "id": "hiring_in", "re": "\\b(?:hiring|recruiting|accepting (?:applications|applicants|candidates)|considering (?:applicants|candidates)|(?:can|could|will|are able to) (?:only )?(?:hire|employ|consider)|we hire) (?:only )?(?:in|from|within|across)\\b", "before": 0, "after": 70, "strength": "strong" },
+    { "id": "location_label", "re": "\\b(?:location|locations|region|regions|country|countries|eligible (?:countries|locations|regions)|geo|work location|remote location|Standort|Arbeitsort|Einsatzort)\\s*[:–]", "before": 0, "after": 60, "strength": "strong" },
+    { "id": "located", "re": "\\b(?:reside|resides|residing|live|lives|living|located|based|situated)\\s+(?:in|within|out of|anywhere in)\\b", "before": 0, "after": 60, "strength": "weak" },
+    { "id": "loc_based", "re": "-based\\b", "before": 25, "after": 0, "strength": "weak" },
+    { "id": "candidates_from", "re": "\\b(?:candidates|applicants|you|talent|people|engineers|developers|professionals|individuals|contractors) (?:from|in|within|based in|located in)\\b", "before": 0, "after": 50, "strength": "weak" },
+    { "id": "within", "re": "\\bwithin\\b", "before": 0, "after": 25, "strength": "weak" },
+
+    { "id": "de_wohnsitz", "re": "\\b(?:Wohnsitz|Wohnort|wohnhaft|Lebensmittelpunkt)\\b", "before": 20, "after": 50, "strength": "strong" },
+    { "id": "de_ansaessig", "re": "ans(?:ä|ae)ssig\\b", "before": 40, "after": 10, "strength": "strong" },
+    { "id": "de_permit", "re": "\\b(?:Arbeitserlaubnis|Arbeitsgenehmigung|Aufenthaltstitel|Aufenthaltserlaubnis|Arbeitsberechtigung|Staatsangeh(?:ö|oe)rigkeit|Staatsb(?:ü|ue)rgerschaft)\\b", "before": 40, "after": 50, "strength": "strong" },
+    { "id": "de_nur", "re": "\\bnur\\b", "before": 30, "after": 35, "strength": "strong" },
+    { "id": "de_innerhalb", "re": "\\binnerhalb\\b", "before": 0, "after": 40, "strength": "strong" },
+    { "id": "de_remote_aus", "re": "\\b(?:remote|Homeoffice|Home-Office|mobiles Arbeiten|mobile Arbeit)\\s+(?:aus|in|innerhalb|von)\\b", "before": 0, "after": 40, "strength": "strong" }
+  ],
+  "exclude": [
+    { "id": "not_hire", "re": "\\b(?:not|unable to|cannot|can't|can not|won't|will not|do not|don't|are not able to)\\b[^.;!?]{0,30}?\\b(?:hire|consider|accept|employ|open|available|support|work with)\\b[^.;!?]{0,25}?\\b(?:in|from)\\b", "after": 60 },
+    { "id": "except", "re": "\\b(?:excluding|except(?: for)?|other than|not including|with the exception of|au(?:ß|ss)er|ausgenommen)\\b", "after": 45 },
+    { "id": "de_nicht", "re": "\\bnicht\\b[^.;!?]{0,20}\\b(?:aus|in)\\b", "after": 40 }
+  ],
+  "markers": [
+    { "id": "w2", "re": "\\bW-?2\\b(?![^.;]{0,20}\\b(?:or|/)\\s*(?:1099|C2C|contract))", "codes": ["US"], "label": "US W-2 employment only" },
+    { "id": "itar", "re": "\\bITAR\\b", "codes": ["US"], "label": "ITAR rules (US persons only)" },
+    { "id": "us_person", "re": "\\bU\\.?S\\.? persons?\\b", "codes": ["US"], "label": "US persons only" }
+  ],
+  "worldwide": [
+    "\\bworld-?wide\\b",
+    "\\banywhere in the world\\b",
+    "\\b(?:from|work from|working from|live|based|located|apply from|hire from|hiring from|work|hire|hiring|recruit|recruiting|remote) anywhere\\b",
+    "\\bany (?:country|location|time ?zone)\\b",
+    "\\bglobal(?:ly)?[ -](?:remote|distributed|hiring|applicants|candidates|talent)\\b",
+    "\\bremote[ ,\\-–(/:]*(?:global|worldwide|anywhere)\\b",
+    "\\bno (?:location|geographic(?:al)?) (?:restrictions?|requirements?|limitations?)\\b",
+    "\\blocation[- ]?(?:independent|agnostic)\\b",
+    "\\b(?:all|any) (?:countries|locations|time ?zones)\\b",
+    "\\bfrom any country\\b",
+    "\\bopen to (?:candidates|applicants|people|everyone|talent) (?:from )?(?:all over the world|around the world|everywhere|any country)\\b",
+    "^\\s*anywhere\\b",
+    "\\bortsunabh(?:ä|ae)ngig\\b",
+    "\\bvon (?:ü|ue)berall\\b",
+    "\\bvon jedem Ort\\b",
+    "\\baus (?:aller Welt|der ganzen Welt)\\b",
+    "\\b(?:remote|arbeiten|Homeoffice)\\b[^.;]{0,20}\\bweltweit\\b",
+    "\\bweltweit (?:remote|arbeiten)\\b"
+  ],
+  "worldwideNotNear": "\\b(?:customers?|clients?|users?|offices?|leader|leading|brands?|businesses|markets?|millions|presence|operations|partners|merchants|audiences?|patients|members|subscribers|shipping|ships|Kunden|Marktf(?:ü|ue)hrer|Standorte)\\b",
+  "companyContext": "\\b(?:we|we're|we are|our|company|startup|headquarter(?:s|ed)|HQ|offices?|founded|wir|unser|unsere|Unternehmen|Firmensitz|Hauptsitz)\\b",
+  "remoteWords": "\\b(?:remote|fully remote|100% remote|home ?office|home-office|wfh|work from home|telecommute|telework)\\b"
+}

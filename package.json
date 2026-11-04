@@ -1,0 +1,24 @@
+{
+  "name": "extension-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/release/build.mjs --watch",
+    "build": "node tools/release/build.mjs",
+    "test": "node tools/release/test.mjs",
+    "release": "node tools/release/release.mjs",
+    "assets": "node tools/release/assets.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "scorecard": "node -e \"console.log('Scorecard comes in Step 2 (tools/scorecard).')\""
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/chrome": "^0.1.0",
+    "@types/node": "^26.6.6",
+    "esbuild": "0.28.2",
+    "fflate": "^0.8.2",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0",
+    "vitest": "^3.2.0"
+  }
+}

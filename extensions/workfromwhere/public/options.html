@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>WorkFromWhere settings</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    main { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; }
+    header { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    header img { width: 32px; height: 32px; }
+  </style>
+</head>
+<body>
+<main>
+  <header><img src="icons/128.png" alt=""><h1>WorkFromWhere settings</h1></header>
+  <p class="x-muted">See if a “remote” job accepts people from your country, right on the job post.</p>
+
+  <section class="x-card">
+    <h2>Where you are</h2>
+    <div id="profile"></div>
+    <p class="x-muted">We use this only on your computer to compare against job posts. Nothing is sent anywhere.</p>
+  </section>
+
+  <section class="x-card">
+    <h2>Pro settings</h2>
+    <p class="x-muted" id="pro-note">These need Pro.</p>
+    <div id="pro-settings">
+      <label class="x-check"><input type="checkbox" id="listBadges"> Show badges on search-result lists</label>
+      <label class="x-check"><input type="checkbox" id="hideRed"> Hide jobs I can’t take (restricted) in search results</label>
+      <label for="customRed">Phrases that mean “restricted” for me (one per line)</label>
+      <textarea id="customRed" placeholder="e.g. must be able to commute&#10;W-9 only"></textarea>
+      <label for="customGreen">Phrases that mean “open to me” (one per line)</label>
+      <textarea id="customGreen" placeholder="e.g. we hire in Nigeria&#10;Deel contractors welcome"></textarea>
+    </div>
+  </section>
+
+  <section id="pro"></section>
+
+  <section class="x-card">
+    <h2>Where it works</h2>
+    <p id="sites" class="x-muted"></p>
+    <p class="x-muted">On any other job site, click the WorkFromWhere icon and choose <strong>Check this page</strong>.</p>
+  </section>
+
+  <p class="x-muted">WorkFromWhere reads the page you’re viewing and shows a badge. It never applies, clicks or submits anything, and it has no tracking. Not affiliated with LinkedIn, Indeed, SEEK, StepStone or any job site. Always confirm eligibility with the employer.</p>
+</main>
+<script src="options.js"></script>
+</body>
+</html>
