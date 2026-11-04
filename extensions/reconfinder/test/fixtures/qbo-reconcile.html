@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><title>QuickBooks</title></head>
+<body>
+<!-- Modelled on the QBO Reconcile screen layout (column names and summary labels). Not captured live: QBO needs a login. Synthetic data. -->
+<header><span data-testid="company-name">Acme Bakery LLC</span></header>
+<h1>Reconcile</h1>
+<div class="summary">
+  <div><div>Statement ending balance</div><div>$12,431.25</div></div>
+  <div><div>Cleared balance</div><div>$12,342.25</div></div>
+  <div class="diff"><div>Difference</div><div>$89.00</div></div>
+</div>
+<table class="reconcile-grid">
+  <thead><tr><th>DATE</th><th>TYPE</th><th>REF NO.</th><th>ACCOUNT</th><th>PAYEE</th><th>MEMO</th><th>PAYMENT (USD)</th><th>DEPOSIT (USD)</th><th>✓</th></tr></thead>
+  <tbody>
+    <tr data-id="t1"><td>10/01/2026</td><td>Expense</td><td>1001</td><td>Rent</td><td>Landlord Co</td><td></td><td>$1,500.00</td><td></td><td><input type="checkbox" checked></td></tr>
+    <tr data-id="t2"><td>10/03/2026</td><td>Deposit</td><td></td><td>Sales</td><td>Square</td><td></td><td></td><td>$4,200.00</td><td><input type="checkbox" checked></td></tr>
+    <tr data-id="t3"><td>10/05/2026</td><td>Expense</td><td></td><td>Supplies</td><td>Staples</td><td></td><td>$25.00</td><td></td><td><input type="checkbox" checked></td></tr>
+    <tr data-id="t4"><td>10/09/2026</td><td>Deposit</td><td></td><td>Refunds</td><td>Vendor refund</td><td></td><td></td><td>$89.00</td><td><input type="checkbox"></td></tr>
+    <tr data-id="t5"><td>10/12/2026</td><td>Expense</td><td></td><td>Meals</td><td>Coffee Shop</td><td></td><td>$12.75</td><td></td><td><input type="checkbox"></td></tr>
+  </tbody>
+</table>
+</body></html>

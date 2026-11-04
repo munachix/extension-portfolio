@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>ReconFinder</title><link rel="stylesheet" href="tokens.css">
+<style>body{width:360px;padding:14px}header{display:flex;align-items:center;gap:8px}header img{width:26px;height:26px}textarea{min-height:130px;font-family:ui-monospace,Menlo,monospace;font-size:12px}</style></head>
+<body>
+<header><img src="icons/48.png" alt=""><h1>ReconFinder</h1></header>
+<p class="x-muted">Open <b>Reconcile</b> in QuickBooks Online: the likely cause of the difference appears on the page.</p>
+<section class="x-card pro-only"><h2>Paste mode (Pro)</h2>
+  <p class="x-muted">One transaction per line: date, payee, amount, and ✓ if it’s ticked. Payments negative. Copy straight from a spreadsheet works.</p>
+  <textarea id="paste" placeholder="10/05/2026	Staples	-25.00	✓&#10;10/07/2026	Client A	4200.00"></textarea>
+  <label for="diff">Difference (statement − cleared)</label><input type="text" id="diff" placeholder="e.g. 89.00">
+  <div class="x-row" style="margin-top:8px"><button type="button" id="find" class="primary">Find the cause</button><button type="button" id="csv" hidden>Export CSV</button></div>
+  <div id="out" role="status"></div>
+</section>
+<section id="pro"></section>
+<p class="x-muted">Read-only and private: nothing leaves your browser. Not affiliated with Intuit or QuickBooks.</p>
+<script src="popup.js"></script>
+</body></html>

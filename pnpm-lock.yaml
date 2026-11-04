@@ -254,6 +254,22 @@ importers:
         specifier: workspace:*
         version: link:../../packages/testing
 
+  extensions/reconfinder:
+    dependencies:
+      '@ext/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@ext/job-sites':
+        specifier: workspace:*
+        version: link:../../packages/job-sites
+      '@ext/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+    devDependencies:
+      '@ext/testing':
+        specifier: workspace:*
+        version: link:../../packages/testing
+
   extensions/visaflag:
     dependencies:
       '@ext/core':

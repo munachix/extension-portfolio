@@ -59,17 +59,19 @@
     }
   },
   {
-    "slug": "goldenmap",
-    "name": "GoldenMap",
+    "slug": "flipcomps",
+    "name": "FlipComps",
     "launchDate": null,
-    "priceModel": "$12 lifetime",
-    "scores": {
-      "D": 2,
-      "C": 5,
-      "W": 2,
-      "B": 5,
-      "R": 5,
-      "S": 3
-    }
+    "priceModel": "$5.99/mo or $39 lifetime",
+    "scores": {},
+    "notes": "US resellers. Built Nov 2026."
+  },
+  {
+    "slug": "reconfinder",
+    "name": "ReconFinder",
+    "launchDate": null,
+    "priceModel": "$9/mo or $79/yr",
+    "scores": {},
+    "notes": "US bookkeepers. QBO page reader modelled; verify on a live QBO account."
   }
 ]
