@@ -14,3 +14,7 @@ a { color: var(--accent); }
 .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
 img.shot { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border); }
 footer { margin-top: 48px; color: var(--muted); font-size: 14px; }
+a.card { text-decoration: none; color: inherit; display: block; transition: border-color .15s; }
+a.card:hover { border-color: var(--accent); }
+a.card strong { color: var(--accent); }
+footer a { color: var(--accent); }
