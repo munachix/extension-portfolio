@@ -4,7 +4,7 @@ import cfg from '../extension.config.json';
 export const STORE_NAME = 'VisaFlag: Visa Sponsor Checker – UK, US H-1B, Canada, NL';
 export const SUMMARY = 'See if a company sponsors work visas while you browse LinkedIn & Indeed. UK sponsor list, H-1B history, Canada LMIA, Dutch IND.';
 
-export default function manifest({ version, dev, licenseHost }: { version: string; dev: boolean; licenseHost: string }) {
+export default function manifest({ version, dev, licenseHost, dataUrl }: { version: string; dev: boolean; licenseHost: string; dataUrl?: string }) {
   const sites = ADAPTERS.filter((a) => cfg.sites.includes(a.id));
   return {
     manifest_version: 3,
@@ -17,7 +17,7 @@ export default function manifest({ version, dev, licenseHost }: { version: strin
     options_page: 'options.html',
     background: { service_worker: 'background.js' },
     permissions: ['storage', 'alarms'],
-    host_permissions: [`${new URL(cfg.dataBaseUrl).origin}/*`, licenseHost],
+    host_permissions: [`${new URL(dataUrl || cfg.dataBaseUrl).origin}/*`, licenseHost],
     content_scripts: [{ matches: sites.flatMap((a) => a.matches), js: ['content.js'], run_at: 'document_idle' }],
   };
 }

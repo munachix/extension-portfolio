@@ -17,7 +17,7 @@ export const LICENSE: LicenseConfig = {
   productIds: (cfg.license as { productIds?: string[] }).productIds,
   checkoutUrl: cfg.license.checkoutUrl,
 };
-export const DATA_BASE = cfg.dataBaseUrl.replace(/\/$/, '');
+export const DATA_BASE = ((typeof __DATA_URL__ !== 'undefined' && __DATA_URL__) || cfg.dataBaseUrl).replace(/\/$/, '');
 export const PRODUCT = cfg.productName;
 export const PRICE = cfg.priceText;
 export const PRO_FEATURES = [

@@ -9,3 +9,4 @@ playwright-report/
 .DS_Store
 ._*
 tools/scorecard/dashboard.html
+extensions/visaflag/pipeline/out/

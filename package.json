@@ -10,7 +10,9 @@
     "assets": "node tools/release/assets.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "scorecard": "node tools/scorecard/cli.mjs",
-    "visaflag:us": "node extensions/visaflag/pipeline/build.mjs us-snapshot"
+    "visaflag:us": "node extensions/visaflag/pipeline/build.mjs us-snapshot",
+    "visaflag:try": "node extensions/visaflag/pipeline/try.mjs",
+    "site": "node sites/landing/build.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",

@@ -21,9 +21,9 @@ Live checks on real sites (`tools/live-check/README.md`): Greenhouse dropdowns, 
 Tests: 218 unit + 41 browser, all passing. Shared: job-site readers (17 sites), scorecard (with Creem revenue import), one website (`sites/landing`), release tooling.
 
 ## Your launch checklist
-1. **Brand + domain.** Replace `BRAND-NAME` and `support@REPLACE-ME.com` in `sites/landing` (`sites/landing/README.md`).
+1. **Brand + domain.** "Plainwork" is a working name; change it in `sites/landing/site.config.json`. Try everything first with `TESTING.md`.
 2. **Creem.** One product per price (e.g. FlipComps monthly + FlipComps lifetime) with license keys on. Deploy the license server (`tools/license-worker/README.md`). Put `licenseServerUrl`, `checkoutUrl` and **all** that extension's product ids in `license.productIds` in `extensions/<slug>/extension.config.json`.
-3. **Website.** Publish `sites/landing` on Cloudflare Pages with your domain.
+3. **Website.** Set the brand, domain and email in `sites/landing/site.config.json`, run `pnpm site`, and publish `sites/landing/public` on Cloudflare Pages (`sites/landing/README.md`).
 4. **VisaFlag data.** Push to GitHub, turn on Pages, run the "VisaFlag data" Action, set `dataBaseUrl`. Download the two US DOL files and run `pnpm visaflag:us …` (see `extensions/visaflag/README.md`).
 5. **Live checks (need your logins):** HireFill on a real Workday application; FlipComps on eBay sold results; ReconFinder on a QBO Reconcile screen; VisaFlag/WorkFromWhere on LinkedIn while logged in. Tell me what misses and I'll fix the selectors.
 6. `pnpm release <slug>` for each (it stops and tells you if anything above is missing), upload `dist/<slug>-0.1.0.zip`, and paste `store/listing.md` + `store/permissions.md` into the dashboard.

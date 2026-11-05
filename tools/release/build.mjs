@@ -49,7 +49,8 @@ export async function buildExtension(slug, { prod = false, watch = false } = {})
       configFile: false,
       logLevel: 'warn',
       root: dir,
-      define: { __DEV__: JSON.stringify(!prod) },
+      // __DATA_URL__: dev-only override of a data host (e.g. VisaFlag's lists served from localhost while testing)
+      define: { __DEV__: JSON.stringify(!prod), __DATA_URL__: JSON.stringify(!prod && process.env.EXT_DATA_URL ? process.env.EXT_DATA_URL : '') },
       resolve: { alias: ALIASES },
       build: {
         outDir,
@@ -71,7 +72,7 @@ export async function buildExtension(slug, { prod = false, watch = false } = {})
 
   const { licenseHost } = await loadTsModule(path.join(ROOT, 'packages/core/src/license.ts'), outDir);
   const mod = await loadTsModule(path.join(dir, 'src/manifest.ts'), outDir);
-  const manifest = mod.default({ version, dev: !prod, licenseHost: licenseHost(config.license) });
+  const manifest = mod.default({ version, dev: !prod, licenseHost: licenseHost(config.license), dataUrl: !prod ? process.env.EXT_DATA_URL : undefined });
   await writeFile(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
 
   for (const icon of Object.values(manifest.icons)) {
