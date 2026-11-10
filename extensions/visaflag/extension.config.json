@@ -3,7 +3,7 @@
   "productName": "VisaFlag",
   "spec": "specs/02-visaflag.md",
   "priceText": "$24 once",
-  "dataBaseUrl": "https://REPLACE-ME.github.io/extension-portfolio/visaflag",
+  "dataBaseUrl": "https://munachix.github.io/extension-portfolio/visaflag",
   "license": {
     "provider": "creem",
     "licenseServerUrl": "https://license.REPLACE-ME.com",
